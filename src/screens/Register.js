@@ -80,6 +80,7 @@ class Register extends Component {
                 orgaization: this.state.Organization,
                 industry: this.state.Industry,
                 education: this.state.BaseEducation,
+                password: this.state.Password,
                 status: "member",
                 avatar:
                   "https://cdn.shopify.com/s/files/1/0533/2089/files/placeholder-images-image_large.png?v=1530129081",

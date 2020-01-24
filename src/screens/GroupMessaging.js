@@ -149,6 +149,19 @@ export default class GroupMessages extends React.Component {
         timeStamp: new Date().getTime(),
         status: false,
         group: true
+      })
+      .then(() => {
+        f.database()
+          .ref("Notifications")
+          .push({
+            group: true,
+            user: {
+              id: this.props.navigation.getParam("user").id,
+              name: this.props.navigation.getParam("user").name,
+              avatar: this.props.navigation.getParam("user").avatar
+            },
+            NewTime: `${new Date().getUTCHours()}:${new Date().getUTCMinutes()}`
+          });
       });
   }
 

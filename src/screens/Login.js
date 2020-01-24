@@ -230,7 +230,15 @@ class Login extends Component {
             }}
             placeholder="Password"
             placeholderTextColor="#A9A9A9"
+            secureTextEntry
           />
+          <View style={{ width: "80%", alignItems: "flex-end" }}>
+            <TouchableOpacity
+              onPress={() => this.props.navigation.navigate("Forgot")}
+            >
+              <Text>Forgot Password ?</Text>
+            </TouchableOpacity>
+          </View>
         </View>
         <View style={{ marginTop: 20, width: "100%", alignItems: "center" }}>
           <TouchableOpacity

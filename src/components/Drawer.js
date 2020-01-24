@@ -260,6 +260,27 @@ const NavigationOptions = props => (
             <Text style={{ fontSize: 20 }}>Groups</Text>
           </Body>
         </ListItem>
+        <ListItem
+          onPress={() => props.navigation.navigate("NotificationsList")}
+          icon
+          style={{ borderBottomWidth: 0, marginTop: 20, paddingBottom: 20 }}
+        >
+          <Left>
+            <Button
+              style={{
+                backgroundColor: "#5ABAEE",
+                borderRadius: 100,
+                width: 50,
+                height: 50
+              }}
+            >
+              <Icon active name="group-work" type="MaterialIcons" />
+            </Button>
+          </Left>
+          <Body style={{ borderBottomWidth: 0, paddingLeft: 10 }}>
+            <Text style={{ fontSize: 20 }}>Notifications</Text>
+          </Body>
+        </ListItem>
       </View>
     </ScrollView>
   </SafeAreaView>

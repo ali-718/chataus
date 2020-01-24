@@ -65,7 +65,7 @@ export default class Messages extends React.Component {
         this.setState({
           user: {
             _id: auth.currentUser.uid,
-            name: res.val().username,
+            name: res.val().name,
             avatar: res.val().avatar
           }
         });
@@ -176,7 +176,8 @@ export default class Messages extends React.Component {
   };
 
   onSend(messages) {
-    const OriginalMessage = Object.assign({}, messages[0]);
+    console.log(messages);
+    const OriginalMessage = messages[0];
     const message = {
       id: OriginalMessage._id,
       text: OriginalMessage.text
@@ -224,25 +225,6 @@ export default class Messages extends React.Component {
             timeStamp: new Date().getTime(),
             status: false
           });
-
-        f.database()
-          .ref("users")
-          .child(f.auth().currentUser.uid)
-          .child("deletedUsers")
-          .once("value")
-          .then(res => {
-            res.forEach(item => {
-              console.log(`data ${item.val()}`);
-              if (item.val() == this.props.navigation.getParam("user").id) {
-                f.database()
-                  .ref("users")
-                  .child(f.auth().currentUser.uid)
-                  .child("deletedUsers")
-                  .child(item.key)
-                  .remove();
-              }
-            });
-          });
       });
 
     f.database()
@@ -255,6 +237,19 @@ export default class Messages extends React.Component {
           OriginalMessage.text,
           this.props.navigation.getParam("user").expoPushToken
         );
+
+        f.database()
+          .ref("Notifications")
+          .push({
+            group: false,
+            user: {
+              id: snapshot.key,
+              name: snapshot.val().name,
+              avatar: snapshot.val().avatar
+            },
+            NewTime: `${new Date().getUTCHours()}:${new Date().getUTCMinutes()}`,
+            recieverId: this.props.navigation.getParam("user").id
+          });
       });
   }
 

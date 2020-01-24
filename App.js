@@ -23,6 +23,8 @@ import GroupChat from "./src/screens/GroupChat";
 import EventDetails from "./src/screens/EventDetails";
 import Profile from "./src/screens/Profile";
 import GroupMessages from "./src/screens/GroupMessaging";
+import Forgot from "./src/screens/Forgot";
+import Notification from "./src/screens/Notification";
 
 export default class App extends Component {
   render() {
@@ -77,6 +79,12 @@ const Stack = createStackNavigator(
     },
     Profile: {
       screen: Profile
+    },
+    Forgot: {
+      screen: Forgot
+    },
+    NotificationsList: {
+      screen: Notification
     }
   },
   {
