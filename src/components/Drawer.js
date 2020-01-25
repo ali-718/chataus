@@ -54,7 +54,7 @@ const NavigationOptions = props => (
             size="large"
             rounded
             source={{
-              uri: props.user.user.avatar
+              uri: props.user.user
                 ? props.user.user.avatar
                 : "https://via.placeholder.com/300"
             }}

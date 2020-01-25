@@ -204,9 +204,7 @@ class Edit extends Component {
           user: {
             ...res.val(),
             id: res.key
-          },
-          areaid: res.val().areaid,
-          houseid: res.val().houseid
+          }
         });
       })
       .then(() => {

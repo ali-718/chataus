@@ -1,5 +1,5 @@
 import React from "react";
-import { GiftedChat } from "react-native-gifted-chat";
+import { GiftedChat, Actions, Bubble } from "react-native-gifted-chat";
 import {
   View,
   KeyboardAvoidingView,
@@ -13,6 +13,7 @@ import { Icon, Spinner, Thumbnail } from "native-base";
 import styles from "../../constants/styles";
 import * as f from "firebase";
 import { Avatar } from "react-native-elements";
+import CustomActions from "./CustomActions";
 
 const auth = f.auth();
 
@@ -21,6 +22,32 @@ export default class Messages extends React.Component {
     messages: [],
     user: {},
     isLoading: true
+  };
+
+  renderActions = props => {
+    const options = {
+      "Action 1": props => {
+        alert("option 1");
+      },
+      "Action 2": props => {
+        alert("option 2");
+      },
+      Cancel: () => {}
+    };
+    return <Actions {...props} options={options} />;
+  };
+
+  renderBubble = props => {
+    return (
+      <Bubble
+        {...props}
+        wrapperStyle={{
+          left: {
+            backgroundColor: "#f0f0f0"
+          }
+        }}
+      />
+    );
   };
 
   sendPushNotification = (title, message, token) => {
@@ -363,7 +390,10 @@ export default class Messages extends React.Component {
               showUserAvatar={true}
               onSend={messages => this.onSend(messages)}
               user={this.state.user}
-            />
+              alwaysShowSend={true}
+              renderActions={this.renderActions}
+              renderBubble={this.renderBubble}
+            ></GiftedChat>
           </KeyboardAvoidingView>
         )}
       </SafeAreaView>

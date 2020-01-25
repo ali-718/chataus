@@ -122,62 +122,78 @@ class Login extends Component {
     this.setState({
       isLoading: true
     });
-    const { type, token } = await Facebook.logInWithReadPermissionsAsync(
-      "2262185377406886",
-      {
-        permissions: ["public_profile", "email"]
-      }
-    );
+    try {
+      const { type, token } = await Facebook.logInWithReadPermissionsAsync(
+        "2262185377406886",
+        {
+          permissions: ["public_profile", "email"]
+        }
+      );
 
-    console.log("here we go");
-    if (type === "success") {
-      const credentials = f.auth.FacebookAuthProvider.credential(token);
+      console.log("here we go");
+      if (type === "success") {
+        const credentials = f.auth.FacebookAuthProvider.credential(token);
 
-      f.auth()
-        .signInWithCredential(credentials)
-        .then(res => {
-          console.log(res.additionalUserInfo.profile.picture.data.url);
-          f.database()
-            .ref("users")
-            .child(res.user.uid)
-            .once("value")
-            .then(item => {
-              if (item.val()) {
-                console.log("res.val() is availaible");
-                this.props.LoginAction(item.val());
-                this.props.navigation.navigate("Edit", {
-                  fromLogin: true,
-                  fromFacebook: true
-                });
-                this.setState({
-                  isLoading: false
-                });
-              } else {
-                f.database()
-                  .ref("users")
-                  .child(res.user.uid)
-                  .set({
-                    name: res.user.providerData[0].displayName,
-                    email: res.user.providerData[0].email,
-                    avatar: res.additionalUserInfo.profile.picture.data.url,
-                    status: "user",
-                    areaid: 0,
-                    houseid: 0,
-                    shortMessage: "short message"
-                  })
-                  .then(() => {
-                    this.props.LoginAction(item.val());
-                    console.log("res.val() not working");
-                    console.log("user added succcessfully");
-                    this.props.navigation.navigate("Edit");
-                    this.setState({
-                      isLoading: false
-                    });
+        f.auth()
+          .signInWithCredential(credentials)
+          .then(res => {
+            console.log(res.additionalUserInfo.profile.picture.data.url);
+            f.database()
+              .ref("users")
+              .child(res.user.uid)
+              .once("value")
+              .then(item => {
+                if (item.val()) {
+                  console.log("res.val() is availaible");
+                  this.props.LoginAction(item.val());
+                  this.props.navigation.navigate("Edit", {
+                    fromLogin: true,
+                    fromFacebook: true
                   });
-              }
-            });
-        })
-        .catch(e => console.log(e));
+                  this.setState({
+                    isLoading: false
+                  });
+                } else {
+                  f.database()
+                    .ref("users")
+                    .child(res.user.uid)
+                    .set({
+                      name: res.user.providerData[0].displayName,
+                      email: res.user.providerData[0].email,
+                      avatar: res.additionalUserInfo.profile.picture.data.url,
+                      status: "user",
+                      areaid: 0,
+                      houseid: 0,
+                      shortMessage: "short message"
+                    })
+                    .then(() => {
+                      this.props.LoginAction(item.val());
+                      console.log("res.val() not working");
+                      console.log("user added succcessfully");
+                      this.props.navigation.navigate("Edit");
+                      this.setState({
+                        isLoading: false
+                      });
+                    });
+                }
+              });
+          })
+          .catch(e => console.log(e));
+      } else {
+        this.setState({
+          isLoading: false
+        });
+        alert(
+          "Cant use facebook sdk, looks like your facebook app is not up to date...!"
+        );
+      }
+    } catch (e) {
+      alert(
+        "Cant use facebook sdk, looks like your facebook app is not up to date...!"
+      );
+      this.setState({
+        isLoading: false
+      });
     }
   };
 
@@ -256,6 +272,38 @@ class Login extends Component {
           >
             <Text style={{ color: "white", fontWeight: "bold" }}>Login</Text>
           </TouchableOpacity>
+          <Text>OR</Text>
+          <TouchableOpacity
+            onPress={() => this.FacebookLogin()}
+            style={{
+              backgroundColor: "#3498F1",
+              width: "80%",
+              height: 40,
+              alignItems: "center",
+              justifyContent: "center",
+              borderRadius: 5,
+              marginTop: 10,
+              flexDirection: "row"
+            }}
+          >
+            <Icon
+              name="facebook-square"
+              type="FontAwesome"
+              style={{ color: "white" }}
+            />
+            <Text
+              style={{
+                color: "white",
+                fontWeight: "bold",
+                alignItems: "center",
+                justifyContent: "center",
+                marginLeft: 20
+              }}
+            >
+              Continue with Facebook
+            </Text>
+          </TouchableOpacity>
+
           <View
             style={{
               width: "80%",
