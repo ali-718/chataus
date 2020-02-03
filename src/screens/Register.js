@@ -58,7 +58,12 @@ class Register extends Component {
       this.state.Email != "" &&
       this.state.Phone != "" &&
       this.state.Password != "" &&
-      this.state.ConfirmPassword != ""
+      this.state.ConfirmPassword != "" &&
+      this.state.JobTitle != "" &&
+      this.state.Location !== "" &&
+      this.state.Organization != "" &&
+      this.state.Industry != "" &&
+      this.state.BaseEducation !== ""
     ) {
       if (this.state.Password === this.state.ConfirmPassword) {
         firebase
@@ -87,23 +92,6 @@ class Register extends Component {
                 areaid: 0,
                 houseid: 0,
                 shortMessage: "short message"
-              })
-              .then(() => {
-                axios
-                  .post(
-                    `http://198.37.118.15:7040/api/Task/AddUser?Name=${this.state.Name}&UserName=${this.state.UserName}&Description=&email=${this.state.Email}&expoPushToken=&ShortMsg=&cnic=${this.state.CNIC}&MobileNo=${this.state.Phone}&FirBaseId=${user.user.uid}`
-                  )
-                  .then(() => {
-                    this.props.LoginAction({
-                      name: this.state.Name,
-                      username: this.state.UserName,
-                      email: this.state.Email,
-                      phone: this.state.Phone,
-                      cnic: this.state.CNIC,
-                      avatar:
-                        "https://cdn.shopify.com/s/files/1/0533/2089/files/placeholder-images-image_large.png?v=1530129081"
-                    });
-                  });
               })
               .then(() => {
                 this.props.navigation.navigate("Edit", { fromLogin: true });

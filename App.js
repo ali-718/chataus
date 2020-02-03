@@ -25,6 +25,7 @@ import Profile from "./src/screens/Profile";
 import GroupMessages from "./src/screens/GroupMessaging";
 import Forgot from "./src/screens/Forgot";
 import Notification from "./src/screens/Notification";
+import DataImport from "./src/screens/DataImport";
 
 export default class App extends Component {
   render() {

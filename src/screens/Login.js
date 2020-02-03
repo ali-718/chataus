@@ -208,6 +208,7 @@ class Login extends Component {
           alignItems: "center"
         }}
       >
+        <Image source={Logo} style={{ width: 100, height: 100 }} />
         <View style={{ width: "100%", marginTop: 50, alignItems: "center" }}>
           <TextInput
             onChangeText={val => {
@@ -260,7 +261,7 @@ class Login extends Component {
           <TouchableOpacity
             onPress={() => this.SimpleLogin()}
             style={{
-              backgroundColor: "#3498F1",
+              backgroundColor: "#00247d",
               width: "80%",
               height: 40,
               alignItems: "center",
@@ -276,7 +277,7 @@ class Login extends Component {
           <TouchableOpacity
             onPress={() => this.FacebookLogin()}
             style={{
-              backgroundColor: "#3498F1",
+              backgroundColor: "#00247d",
               width: "80%",
               height: 40,
               alignItems: "center",
@@ -316,7 +317,7 @@ class Login extends Component {
             <TouchableOpacity
               onPress={() => this.props.navigation.navigate("Register")}
             >
-              <Text style={{ color: "blue" }}>Signup</Text>
+              <Text style={{ color: "#00247d" }}>Signup</Text>
             </TouchableOpacity>
           </View>
           {this.state.isLoading ? (

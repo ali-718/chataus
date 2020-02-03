@@ -7,12 +7,14 @@ import {
   Platform,
   Text,
   SafeAreaView,
-  BackHandler
+  BackHandler,
+  ImageBackground
 } from "react-native";
 import { Icon, Spinner, Thumbnail } from "native-base";
 import styles from "../../constants/styles";
 import * as f from "firebase";
 import { Avatar } from "react-native-elements";
+import Messaging from "../assets/Message.png";
 
 const auth = f.auth();
 

@@ -69,7 +69,7 @@ class Splashscreen extends Component {
           alignItems: "center"
         }}
       >
-        <Image source={Logo} style={{ width: 80, height: 100 }} />
+        <Image source={Logo} style={{ width: 100, height: 100 }} />
         {this.state.isLoading ? (
           <View>
             <Spinner style={{ marginTop: 20 }} color="blue" size="large" />

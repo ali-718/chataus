@@ -526,7 +526,8 @@ class Edit extends Component {
                       style={{
                         width: "30%",
                         justifyContent: "center",
-                        alignItems: "center"
+                        alignItems: "center",
+                        backgroundColor: "#00247d"
                       }}
                       rounded
                       primary

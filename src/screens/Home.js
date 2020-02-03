@@ -350,7 +350,9 @@ class Home extends Component {
                       : "60%"
                 }}
               >
-                <Text style={{ color: "black", fontSize: 22 }}>SocialAus</Text>
+                <Text style={{ color: "black", fontSize: 22 }}>
+                  Aus Pro Network
+                </Text>
               </View>
               {this.state.PressLong !== "" &&
               this.props.user.user.status == "admin" ? (

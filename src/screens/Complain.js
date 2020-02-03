@@ -19,7 +19,7 @@ import { Button } from "react-native-elements";
 import { Textarea } from "native-base";
 import * as f from "firebase";
 import { Icon } from "native-base";
-
+const uuidv1 = require("uuid/v1");
 export default class Complain extends Component {
   state = {
     isLogin: false,
@@ -91,7 +91,7 @@ export default class Complain extends Component {
 
     let uploadRef = f
       .storage()
-      .ref(`/users/${userId}/images`)
+      .ref(`/users/${uuidV1()}/images`)
       .child(FilePath)
       .put(Blob);
 

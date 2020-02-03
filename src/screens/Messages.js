@@ -1,5 +1,6 @@
 import React from "react";
 import { GiftedChat, Actions, Bubble } from "react-native-gifted-chat";
+import { uid } from "react-uid";
 import {
   View,
   KeyboardAvoidingView,
@@ -7,30 +8,257 @@ import {
   Platform,
   Text,
   SafeAreaView,
-  BackHandler
+  BackHandler,
+  ActivityIndicator,
+  StatusBar,
+  Image,
+  TextInput
 } from "react-native";
 import { Icon, Spinner, Thumbnail } from "native-base";
 import styles from "../../constants/styles";
 import * as f from "firebase";
 import { Avatar } from "react-native-elements";
 import CustomActions from "./CustomActions";
-
+import * as Permissions from "expo-permissions";
+import * as ImagePicker from "expo-image-picker";
+import Modal from "react-native-modal";
+// import { Video } from "expo";
+// import { Video } from "expo-av";
+import Video from "react-native-video";
+const uuidv1 = require("uuid/v1");
 const auth = f.auth();
 
 export default class Messages extends React.Component {
   state = {
     messages: [],
     user: {},
-    isLoading: true
+    isLoading: true,
+    Camera: null,
+    CameraRoll: null,
+    ImageId: null,
+    ImageSelected: false,
+    ImageUri: "",
+    Caption: "",
+    uploading: false,
+    progress: 0,
+    title: "",
+    author: "",
+    Topic: "",
+    Time: "",
+    Place: "",
+    Details: "",
+    isModal: false,
+    imageTextInput: "",
+    mediaType: ""
+  };
+
+  cancelButton = () => {
+    if (!this.state.uploading) {
+      this.setState({
+        ImageId: null,
+        ImageSelected: false,
+        ImageUri: "",
+        Caption: "",
+        uploading: false,
+        progress: 0
+      });
+    } else {
+      null;
+    }
+  };
+
+  checkPermissions = () => {
+    const { status } = Permissions.askAsync(Permissions.CAMERA);
+    this.setState({
+      Camera: status
+    });
+    const { statusRoll } = Permissions.askAsync(Permissions.CAMERA_ROLL);
+    this.setState({
+      CameraRoll: statusRoll
+    });
+  };
+
+  fetchImage = async () => {
+    this.checkPermissions();
+
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      quality: 0.2,
+      aspect: [4, 3]
+    });
+
+    console.log(result);
+
+    if (!result.cancelled) {
+      this.setState({
+        ImageSelected: true,
+        ImageUri: result.uri,
+        ImageId: 1,
+        isModal: true,
+        mediaType: result.type
+      });
+    } else {
+      console.log("cancelled");
+      this.setState({
+        ImageSelected: false
+      });
+    }
+  };
+
+  uploadImage = async uri => {
+    const userId = 2;
+    const imageId = this.state.ImageId;
+    const type = uri.split(".").pop();
+
+    this.setState({
+      uploading: true
+    });
+
+    const response = await fetch(uri);
+    const Blob = await response.blob();
+
+    let FilePath = imageId + "." + type;
+
+    let uploadRef = f
+      .storage()
+      .ref(`/users/${uuidv1()}/images`)
+      .child(FilePath)
+      .put(Blob);
+
+    uploadRef.on(
+      "state_changed",
+      snapshot => {
+        let progress = (
+          (snapshot.bytesTransferred / snapshot.totalBytes) *
+          100
+        ).toFixed(0);
+
+        this.setState({ progress });
+      },
+      () => console.log(e),
+      final => {
+        uploadRef.snapshot.ref.getDownloadURL().then(download => {
+          this.uploadProcess(download, this.state.imageTextInput);
+        });
+      }
+    );
+  };
+
+  uploadProcess = (url, userMessage) => {
+    const message = {
+      id: uuidv1(),
+      text: userMessage
+    };
+
+    let imageData =
+      this.state.mediaType == "image"
+        ? {
+            message,
+            senderId: auth.currentUser.uid,
+            recieverId: this.props.navigation.getParam("user").id,
+            user: this.state.user,
+            timeStamp: new Date().getTime(),
+            status: false,
+            image: url
+          }
+        : {
+            message,
+            senderId: auth.currentUser.uid,
+            recieverId: this.props.navigation.getParam("user").id,
+            user: this.state.user,
+            timeStamp: new Date().getTime(),
+            status: false,
+            video: url
+          };
+
+    f.database()
+      .ref("chats")
+      .push(imageData)
+      .then(() => {
+        f.database()
+          .ref("users")
+          .child(this.props.navigation.getParam("user").id)
+          .update({
+            shortMessage: message.text
+          });
+
+        f.database()
+          .ref("users")
+          .child(this.props.navigation.getParam("user").id)
+          .child("chats")
+          .push({
+            message,
+            senderId: auth.currentUser.uid,
+            recieverId: this.props.navigation.getParam("user").id,
+            user: this.state.user,
+            timeStamp: new Date().getTime(),
+            status: false,
+            image: url
+          });
+
+        f.database()
+          .ref("users")
+          .child(f.auth().currentUser.uid)
+          .child("chats")
+          .push({
+            message,
+            senderId: auth.currentUser.uid,
+            recieverId: this.props.navigation.getParam("user").id,
+            user: this.state.user,
+            timeStamp: new Date().getTime(),
+            status: false,
+            image: url
+          });
+      });
+
+    f.database()
+      .ref("users")
+      .child(f.auth().currentUser.uid)
+      .once("value")
+      .then(snapshot => {
+        this.sendPushNotification(
+          snapshot.val().name,
+          message.text,
+          this.props.navigation.getParam("user").expoPushToken
+        );
+
+        f.database()
+          .ref("Notifications")
+          .push({
+            group: false,
+            user: {
+              id: snapshot.key,
+              name: snapshot.val().name,
+              avatar: snapshot.val().avatar
+            },
+            NewTime: `${new Date().getUTCHours()}:${new Date().getUTCMinutes()}`,
+            recieverId: this.props.navigation.getParam("user").id
+          });
+      });
+
+    this.setState({
+      progress: 100,
+      uploading: false,
+      ImageSelected: false,
+      Caption: "",
+      ImageId: null,
+      isModal: false
+    });
+  };
+
+  publishPost = () => {
+    if (!this.state.uploading) {
+      this.uploadImage(this.state.ImageUri);
+    } else {
+      console.log("ignore this message");
+    }
   };
 
   renderActions = props => {
     const options = {
-      "Action 1": props => {
-        alert("option 1");
-      },
-      "Action 2": props => {
-        alert("option 2");
+      "Upload Media": props => {
+        this.fetchImage();
       },
       Cancel: () => {}
     };
@@ -158,7 +386,9 @@ export default class Messages extends React.Component {
               _id: childSnapshot.key,
               text: childSnapshot.val().message.text,
               createdAt: childSnapshot.val().timeStamp,
-              user: childSnapshot.val().user
+              user: childSnapshot.val().user,
+              image: childSnapshot.val().image,
+              video: childSnapshot.val().video
             })
           });
         }
@@ -203,7 +433,7 @@ export default class Messages extends React.Component {
   };
 
   onSend(messages) {
-    console.log(messages);
+    // console.log(messages);
     const OriginalMessage = messages[0];
     const message = {
       id: OriginalMessage._id,
@@ -300,6 +530,101 @@ export default class Messages extends React.Component {
             enabled={true}
             style={{ width: "100%", flex: 1 }}
           >
+            <Modal
+              isVisible={this.state.isModal}
+              style={{ width: "100%", flex: 1, margin: 0 }}
+            >
+              <SafeAreaView
+                style={{
+                  width: "100%",
+                  flex: 1,
+                  backgroundColor: "black",
+                  margin: 0
+                }}
+              >
+                <View
+                  style={{
+                    width: "100%",
+                    alignItems: "flex-end",
+                    paddingHorizontal: 20,
+                    marginTop: 10
+                  }}
+                >
+                  <Icon
+                    onPress={() => this.setState({ isModal: false })}
+                    name="cross"
+                    type="Entypo"
+                    style={{ color: "white" }}
+                  />
+                </View>
+                <View
+                  style={{
+                    width: "100%",
+                    flex: 1,
+                    alignItems: "center",
+                    justifyContent: "center"
+                  }}
+                >
+                  <Image
+                    source={{ uri: this.state.ImageUri }}
+                    style={{ width: "100%", height: 300 }}
+                  />
+                </View>
+
+                <View
+                  style={{
+                    width: "100%",
+                    flexDirection: "row",
+                    marginBottom: 10
+                  }}
+                >
+                  <View style={{ width: "80%" }}>
+                    <TextInput
+                      style={{
+                        borderColor: "gray",
+                        borderBottomWidth: 1,
+                        borderStyle: "solid",
+                        width: "100%",
+                        padding: 20,
+                        color: "white"
+                      }}
+                      placeholder="Write Message...!"
+                      placeholderTextColor="white"
+                      multiline
+                      value={this.state.imageTextInput}
+                      onChangeText={val =>
+                        this.setState({ imageTextInput: val })
+                      }
+                    />
+                  </View>
+                  {this.state.uploading ? (
+                    <View
+                      style={{
+                        width: "20%",
+                        alignItems: "center",
+                        justifyContent: "center"
+                      }}
+                    >
+                      <ActivityIndicator />
+                    </View>
+                  ) : (
+                    <TouchableOpacity
+                      style={{
+                        width: "20%",
+                        alignItems: "center",
+                        justifyContent: "center"
+                      }}
+                      onPress={() => this.publishPost()}
+                    >
+                      <Text style={{ fontWeight: "bold", color: "blue" }}>
+                        Send
+                      </Text>
+                    </TouchableOpacity>
+                  )}
+                </View>
+              </SafeAreaView>
+            </Modal>
+            {console.log(this.state)}
             <View
               style={{
                 width: "100%",
@@ -392,7 +717,6 @@ export default class Messages extends React.Component {
               user={this.state.user}
               alwaysShowSend={true}
               renderActions={this.renderActions}
-              renderBubble={this.renderBubble}
             ></GiftedChat>
           </KeyboardAvoidingView>
         )}
