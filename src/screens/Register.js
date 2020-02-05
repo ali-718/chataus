@@ -82,7 +82,7 @@ class Register extends Component {
                 phone: this.state.Phone,
                 jobtitle: this.state.JobTitle,
                 location: this.state.Location,
-                orgaization: this.state.Organization,
+                organization: this.state.Organization,
                 industry: this.state.Industry,
                 education: this.state.BaseEducation,
                 password: this.state.Password,

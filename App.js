@@ -26,6 +26,8 @@ import GroupMessages from "./src/screens/GroupMessaging";
 import Forgot from "./src/screens/Forgot";
 import Notification from "./src/screens/Notification";
 import DataImport from "./src/screens/DataImport";
+import Jahanzeb from "./src/screens/Jahanzeb";
+import Obaid from "./src/screens/Obaid";
 
 export default class App extends Component {
   render() {
@@ -86,6 +88,12 @@ const Stack = createStackNavigator(
     },
     NotificationsList: {
       screen: Notification
+    },
+    Jahanzeb: {
+      screen: Jahanzeb
+    },
+    Obaid: {
+      screen: Obaid
     }
   },
   {

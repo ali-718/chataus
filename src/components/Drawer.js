@@ -268,17 +268,51 @@ const NavigationOptions = props => (
           <Left>
             <Button
               style={{
-                backgroundColor: "#5ABAEE",
+                backgroundColor: "#EA4C89",
                 borderRadius: 100,
                 width: 50,
                 height: 50
               }}
             >
-              <Icon active name="group-work" type="MaterialIcons" />
+              <Icon active name="notifications" type="MaterialIcons" />
             </Button>
           </Left>
           <Body style={{ borderBottomWidth: 0, paddingLeft: 10 }}>
             <Text style={{ fontSize: 20 }}>Notifications</Text>
+          </Body>
+        </ListItem>
+
+        <ListItem
+          onPress={() => props.navigation.navigate("Jahanzeb")}
+          icon
+          style={{ borderBottomWidth: 0, marginTop: 20, paddingBottom: 20 }}
+        >
+          <Left>
+            <Avatar
+              rounded
+              source={require("../assets/jahazeb.jpeg")}
+              size="medium"
+            />
+          </Left>
+          <Body style={{ borderBottomWidth: 0, paddingLeft: 10 }}>
+            <Text style={{ fontSize: 20 }}>Jahanzeb</Text>
+          </Body>
+        </ListItem>
+
+        <ListItem
+          onPress={() => props.navigation.navigate("Obaid")}
+          icon
+          style={{ borderBottomWidth: 0, marginTop: 20, paddingBottom: 20 }}
+        >
+          <Left>
+            <Avatar
+              rounded
+              source={require("../assets/obaid.jpeg")}
+              size="medium"
+            />
+          </Left>
+          <Body style={{ borderBottomWidth: 0, paddingLeft: 10 }}>
+            <Text style={{ fontSize: 20 }}>Obaid</Text>
           </Body>
         </ListItem>
       </View>
