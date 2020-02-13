@@ -8,7 +8,8 @@ import {
   TouchableOpacity,
   SafeAreaView,
   StatusBar,
-  Platform
+  Platform,
+  ImageBackground
 } from "react-native";
 import { Icon, Spinner } from "native-base";
 import * as Facebook from "expo-facebook";
@@ -80,12 +81,13 @@ class Login extends Component {
 
   render() {
     return (
-      <View
+      <ImageBackground
+        source={require("../assets/Message.png")}
         style={{
           width: "100%",
           flex: 1,
           backgroundColor: "white",
-          marginTop: Platform.OS == "android" ? StatusBar.currentHeight : 10
+          paddingTop: Platform.OS == "android" ? StatusBar.currentHeight : 10
         }}
       >
         <View
@@ -161,7 +163,7 @@ class Login extends Component {
             {/* Error fill all fields starts */}
           </View>
         </View>
-      </View>
+      </ImageBackground>
     );
   }
 }

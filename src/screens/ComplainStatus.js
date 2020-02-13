@@ -6,7 +6,8 @@ import {
   ScrollView,
   TouchableOpacity,
   Image,
-  BackHandler
+  BackHandler,
+  ImageBackground
 } from "react-native";
 import {
   Container,
@@ -117,7 +118,10 @@ export default class ComplainStatus extends Component {
             <Spinner color="blue" size="large" />
           </View>
         ) : (
-          <View style={{ width: "100%", flex: 1 }}>
+          <ImageBackground
+            source={require("../assets/Message.png")}
+            style={{ width: "100%", flex: 1 }}
+          >
             {/* Complain modal starts */}
             <Modal
               isVisible={this.state.visibleModal}
@@ -321,7 +325,7 @@ export default class ComplainStatus extends Component {
                 <Text>There are no events registered here...!</Text>
               </View>
             )}
-          </View>
+          </ImageBackground>
         )}
       </SafeAreaView>
     );

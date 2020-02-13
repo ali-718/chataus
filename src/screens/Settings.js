@@ -4,7 +4,8 @@ import {
   View,
   SafeAreaView,
   BackHandler,
-  TouchableOpacity
+  TouchableOpacity,
+  ImageBackground
 } from "react-native";
 import {
   Container,
@@ -120,59 +121,66 @@ class Settings extends Component {
 
   render() {
     return (
-      <SafeAreaView style={[styles.SafeArea, { flex: 1 }]}>
-        {/* Admin Dailog starts */}
-        <DialogInput
-          isDialogVisible={this.state.isDialogVisible}
-          title={"Enter Pin"}
-          submitInput={inputText => {
-            this.makeAdmin(inputText);
-            // console.log(inputText);
-          }}
-          closeDialog={() => {
-            this.closeDailog();
-          }}
-        ></DialogInput>
-        {/* Admin Dailog ends */}
-        <View
-          style={{
-            width: "100%",
-            height: 50,
-            alignItems: "center",
-            justifyContent: "center",
-            flexDirection: "row"
-          }}
-        >
-          <TouchableOpacity
-            style={{
-              width: "20%",
-              justifyContent: "center",
-              alignItems: "center"
+      <ImageBackground
+        source={require("../assets/Message.png")}
+        style={{ width: "100%", flex: 1 }}
+      >
+        <SafeAreaView style={[styles.SafeArea, { flex: 1 }]}>
+          {/* Admin Dailog starts */}
+          <DialogInput
+            isDialogVisible={this.state.isDialogVisible}
+            title={"Enter Pin"}
+            submitInput={inputText => {
+              this.makeAdmin(inputText);
+              // console.log(inputText);
             }}
-            onPress={() => this.props.navigation.goBack()}
+            closeDialog={() => {
+              this.closeDailog();
+            }}
+          ></DialogInput>
+          {/* Admin Dailog ends */}
+          <View
+            style={{
+              width: "100%",
+              height: 50,
+              alignItems: "center",
+              justifyContent: "center",
+              flexDirection: "row"
+            }}
           >
-            <Icon name="ios-arrow-back" style={{ color: "black" }} />
-            {/* {console.log(this.props.company)} */}
-          </TouchableOpacity>
-          <View style={{ width: "80%" }}>
-            <Text style={{ color: "black", fontSize: 22 }}>Settings</Text>
+            <TouchableOpacity
+              style={{
+                width: "20%",
+                justifyContent: "center",
+                alignItems: "center"
+              }}
+              onPress={() => this.props.navigation.goBack()}
+            >
+              <Icon name="ios-arrow-back" style={{ color: "black" }} />
+              {/* {console.log(this.props.company)} */}
+            </TouchableOpacity>
+            <View style={{ width: "80%" }}>
+              <Text style={{ color: "black", fontSize: 22 }}>Settings</Text>
+            </View>
           </View>
-        </View>
-        <View style={{ width: "100%", flex: 1, paddingTop: 20 }}>
-          <ListItem onPress={() => this.props.navigation.navigate("Edit")} icon>
-            <Left>
-              <Button style={{ backgroundColor: "red" }}>
-                <Icon active name="person" type="MaterialIcons" />
-              </Button>
-            </Left>
-            <Body>
-              <Text>Edit Profile</Text>
-            </Body>
-            <Right>
-              <Icon active name="arrow-forward" />
-            </Right>
-          </ListItem>
-          {/* {this.props.user.user.status == "admin" ? null : (
+          <View style={{ width: "100%", flex: 1, paddingTop: 20 }}>
+            <ListItem
+              onPress={() => this.props.navigation.navigate("Edit")}
+              icon
+            >
+              <Left>
+                <Button style={{ backgroundColor: "red" }}>
+                  <Icon active name="person" type="MaterialIcons" />
+                </Button>
+              </Left>
+              <Body>
+                <Text>Edit Profile</Text>
+              </Body>
+              <Right>
+                <Icon active name="arrow-forward" />
+              </Right>
+            </ListItem>
+            {/* {this.props.user.user.status == "admin" ? null : (
             <ListItem
               onPress={() => this.setState({ isDialogVisible: true })}
               icon
@@ -190,56 +198,57 @@ class Settings extends Component {
               </Right>
             </ListItem>
           )} */}
-        </View>
-        {/* Error Login starts */}
-        <AwesomeAlert
-          show={this.state.showAlert}
-          showProgress={false}
-          title="Congratulations!"
-          message="You are now an Admin...!"
-          closeOnTouchOutside={true}
-          closeOnHardwareBackPress={false}
-          showCancelButton={true}
-          showConfirmButton={false}
-          cancelText="Ok"
-          cancelButtonColor="green"
-          cancelButtonStyle={{ width: 50, alignItems: "center" }}
-          onCancelPressed={() => {
-            f.database()
-              .ref("users")
-              .child(f.auth().currentUser.uid)
-              .once("value")
-              .then(item => {
-                if (item.val()) {
-                  this.props.LoginAction(item.val());
-                  console.log("admin approved");
-                }
-              });
+          </View>
+          {/* Error Login starts */}
+          <AwesomeAlert
+            show={this.state.showAlert}
+            showProgress={false}
+            title="Congratulations!"
+            message="You are now an Admin...!"
+            closeOnTouchOutside={true}
+            closeOnHardwareBackPress={false}
+            showCancelButton={true}
+            showConfirmButton={false}
+            cancelText="Ok"
+            cancelButtonColor="green"
+            cancelButtonStyle={{ width: 50, alignItems: "center" }}
+            onCancelPressed={() => {
+              f.database()
+                .ref("users")
+                .child(f.auth().currentUser.uid)
+                .once("value")
+                .then(item => {
+                  if (item.val()) {
+                    this.props.LoginAction(item.val());
+                    console.log("admin approved");
+                  }
+                });
 
-            this.hideAlert();
-          }}
-        />
-        {/* Error login fails */}
+              this.hideAlert();
+            }}
+          />
+          {/* Error login fails */}
 
-        {/* Error fill all fields starts */}
-        <AwesomeAlert
-          show={this.state.showAlert2}
-          showProgress={false}
-          title="Error"
-          message="Wrong pin...!"
-          closeOnTouchOutside={true}
-          closeOnHardwareBackPress={false}
-          showCancelButton={true}
-          showConfirmButton={false}
-          cancelText="Ok"
-          cancelButtonColor="red"
-          cancelButtonStyle={{ width: 50, alignItems: "center" }}
-          onCancelPressed={() => {
-            this.hideAlert2();
-          }}
-        />
-        {/* Error fill all fields starts */}
-      </SafeAreaView>
+          {/* Error fill all fields starts */}
+          <AwesomeAlert
+            show={this.state.showAlert2}
+            showProgress={false}
+            title="Error"
+            message="Wrong pin...!"
+            closeOnTouchOutside={true}
+            closeOnHardwareBackPress={false}
+            showCancelButton={true}
+            showConfirmButton={false}
+            cancelText="Ok"
+            cancelButtonColor="red"
+            cancelButtonStyle={{ width: 50, alignItems: "center" }}
+            onCancelPressed={() => {
+              this.hideAlert2();
+            }}
+          />
+          {/* Error fill all fields starts */}
+        </SafeAreaView>
+      </ImageBackground>
     );
   }
 }

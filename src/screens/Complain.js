@@ -11,7 +11,8 @@ import {
   ScrollView,
   TouchableOpacity,
   StatusBar,
-  KeyboardAvoidingViewComponent
+  KeyboardAvoidingViewComponent,
+  ImageBackground
 } from "react-native";
 import * as Permissions from "expo-permissions";
 import * as ImagePicker from "expo-image-picker";
@@ -229,7 +230,8 @@ export default class Complain extends Component {
 
   render() {
     return (
-      <View
+      <ImageBackground
+        source={require("../assets/Message.png")}
         style={[
           {
             justifyContent: "center",
@@ -507,7 +509,7 @@ export default class Complain extends Component {
             </View>
           </KeyboardAvoidingView>
         )}
-      </View>
+      </ImageBackground>
     );
   }
 }

@@ -5,7 +5,8 @@ import {
   SafeAreaView,
   ScrollView,
   TouchableOpacity,
-  BackHandler
+  BackHandler,
+  ImageBackground
 } from "react-native";
 import {
   Container,
@@ -287,45 +288,50 @@ class Groups extends Component {
                 <Text>You are not added in any group...!</Text>
               </View>
             ) : (
-              <ScrollView style={{ width: "100%", flex: 1 }}>
-                <List style={{ marginTop: 10 }}>
-                  {this.state.groups.map(item => {
-                    return (
-                      <TouchableOpacity
-                        onPress={() => {
-                          if (this.state.PressLong == "") {
-                            this.props.navigation.navigate("GroupChat", {
-                              user: item
-                            });
-                          } else {
-                            this.props.navigation.replace("Groups");
-                          }
-                        }}
-                        key={item.id}
-                        style={{
-                          width: "100%",
-                          height: 70,
-                          flexDirection: "row",
-                          marginTop: 20
-                        }}
-                      >
-                        <View
+              <ImageBackground
+                source={require("../assets/Message.png")}
+                style={{ width: "100%", flex: 1 }}
+              >
+                <ScrollView style={{ width: "100%", flex: 1 }}>
+                  <List style={{ marginTop: 10 }}>
+                    {this.state.groups.map(item => {
+                      return (
+                        <TouchableOpacity
+                          onPress={() => {
+                            if (this.state.PressLong == "") {
+                              this.props.navigation.navigate("GroupChat", {
+                                user: item
+                              });
+                            } else {
+                              this.props.navigation.replace("Groups");
+                            }
+                          }}
+                          key={item.id}
                           style={{
                             width: "100%",
-                            justifyContent: "center",
-                            borderBottomColor: "gainsboro",
-                            borderBottomWidth: 0.5,
-                            borderStyle: "solid",
-                            paddingHorizontal: 20
+                            height: 70,
+                            flexDirection: "row",
+                            marginTop: 20
                           }}
                         >
-                          <Text style={{ fontSize: 22 }}>{item.name}</Text>
-                        </View>
-                      </TouchableOpacity>
-                    );
-                  })}
-                </List>
-              </ScrollView>
+                          <View
+                            style={{
+                              width: "100%",
+                              justifyContent: "center",
+                              borderBottomColor: "gainsboro",
+                              borderBottomWidth: 0.5,
+                              borderStyle: "solid",
+                              paddingHorizontal: 20
+                            }}
+                          >
+                            <Text style={{ fontSize: 22 }}>{item.name}</Text>
+                          </View>
+                        </TouchableOpacity>
+                      );
+                    })}
+                  </List>
+                </ScrollView>
+              </ImageBackground>
             )}
           </View>
         )}

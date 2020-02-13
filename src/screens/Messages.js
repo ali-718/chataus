@@ -12,7 +12,8 @@ import {
   ActivityIndicator,
   StatusBar,
   Image,
-  TextInput
+  TextInput,
+  ImageBackground
 } from "react-native";
 import { Icon, Spinner, Thumbnail } from "native-base";
 import styles from "../../constants/styles";

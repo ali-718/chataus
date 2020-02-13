@@ -10,7 +10,8 @@ import {
   ScrollView,
   SafeAreaView,
   KeyboardAvoidingView,
-  BackHandler
+  BackHandler,
+  ImageBackground
 } from "react-native";
 import Logo from "../assets/logo.png";
 import { Icon, Spinner } from "native-base";
@@ -35,7 +36,8 @@ class Register extends Component {
     Organization: "",
     Industry: "",
     Location: "",
-    BaseEducation: ""
+    BaseEducation: "",
+    Linkedin: ""
   };
 
   componentWillUnmount() {
@@ -63,7 +65,8 @@ class Register extends Component {
       this.state.Location !== "" &&
       this.state.Organization != "" &&
       this.state.Industry != "" &&
-      this.state.BaseEducation !== ""
+      this.state.BaseEducation !== "" &&
+      this.state.Linkedin !== ""
     ) {
       if (this.state.Password === this.state.ConfirmPassword) {
         firebase
@@ -91,7 +94,8 @@ class Register extends Component {
                   "https://cdn.shopify.com/s/files/1/0533/2089/files/placeholder-images-image_large.png?v=1530129081",
                 areaid: 0,
                 houseid: 0,
-                shortMessage: "short message"
+                shortMessage: "short message",
+                linkedin: this.state.Linkedin
               })
               .then(() => {
                 this.props.navigation.navigate("Edit", { fromLogin: true });
@@ -295,6 +299,27 @@ class Register extends Component {
                     paddingLeft: 10
                   }}
                   placeholder="Email"
+                  placeholderTextColor="#A9A9A9"
+                />
+                <TextInput
+                  value={this.state.Linkedin}
+                  onChangeText={val => {
+                    this.setState({
+                      Linkedin: val
+                    });
+                  }}
+                  autoCapitalize="none"
+                  style={{
+                    borderWidth: 1,
+                    width: "80%",
+                    borderRadius: 5,
+                    backgroundColor: "rgba(220,220,220,0.3)",
+                    marginTop: 20,
+                    height: 50,
+                    fontSize: 20,
+                    paddingLeft: 10
+                  }}
+                  placeholder="Linkedin Profile"
                   placeholderTextColor="#A9A9A9"
                 />
                 <TextInput

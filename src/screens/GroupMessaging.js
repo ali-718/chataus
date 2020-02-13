@@ -182,105 +182,110 @@ export default class GroupMessages extends React.Component {
             <Spinner color="blue" size="large" />
           </View>
         ) : (
-          <KeyboardAvoidingView
-            behavior="padding"
-            enabled={true}
+          <ImageBackground
+            source={require("../assets/Message.png")}
             style={{ width: "100%", flex: 1 }}
           >
-            <View
-              style={{
-                width: "100%",
-                height: 50,
-                justifyContent: "center",
-                borderBottomWidth: Platform.OS == "ios" ? 0.2 : 0,
-                borderBottomColor: "gainsboro",
-                borderStyle: "solid",
-                shadowColor: "#000",
-                shadowOffset: {
-                  width: 0,
-                  height: 1
-                },
-                shadowOpacity: 0.18,
-                shadowRadius: 1.0,
-
-                elevation: 1
-              }}
+            <KeyboardAvoidingView
+              behavior="padding"
+              enabled={true}
+              style={{ width: "100%", flex: 1 }}
             >
               <View
                 style={{
-                  width: "90%",
+                  width: "100%",
                   height: 50,
-                  justifyContent: "center"
+                  justifyContent: "center",
+                  borderBottomWidth: Platform.OS == "ios" ? 0.2 : 0,
+                  borderBottomColor: "gainsboro",
+                  borderStyle: "solid",
+                  shadowColor: "#000",
+                  shadowOffset: {
+                    width: 0,
+                    height: 1
+                  },
+                  shadowOpacity: 0.18,
+                  shadowRadius: 1.0,
+
+                  elevation: 1
                 }}
               >
                 <View
                   style={{
-                    width: "100%",
-                    flexDirection: "row",
-                    height: 50
+                    width: "90%",
+                    height: 50,
+                    justifyContent: "center"
                   }}
                 >
-                  <TouchableOpacity
+                  <View
                     style={{
-                      width: "20%",
-                      height: 50,
-                      alignItems: "center",
-                      justifyContent: "center",
-                      flexDirection: "row"
+                      width: "100%",
+                      flexDirection: "row",
+                      height: 50
                     }}
-                    onPress={() => this.props.navigation.goBack()}
                   >
-                    <View
+                    <TouchableOpacity
                       style={{
-                        width: "100%",
-                        height: 20,
+                        width: "20%",
+                        height: 50,
                         alignItems: "center",
-                        justifyContent: "center"
+                        justifyContent: "center",
+                        flexDirection: "row"
                       }}
+                      onPress={() => this.props.navigation.goBack()}
                     >
-                      <Icon
-                        name="arrowleft"
-                        type="AntDesign"
-                        style={{ fontSize: 20 }}
-                      />
-                    </View>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={{
-                      width: "70%",
-                      height: 50,
-                      alignItems: "center",
-                      flexDirection: "row"
-                    }}
-                    onPress={() =>
-                      this.props.navigation.navigate("Profile", {
-                        user: this.props.navigation.getParam("user")
-                      })
-                    }
-                    disabled={true}
-                  >
-                    <Avatar
-                      source={{
-                        uri: this.props.navigation.getParam("user").avatar
+                      <View
+                        style={{
+                          width: "100%",
+                          height: 20,
+                          alignItems: "center",
+                          justifyContent: "center"
+                        }}
+                      >
+                        <Icon
+                          name="arrowleft"
+                          type="AntDesign"
+                          style={{ fontSize: 20 }}
+                        />
+                      </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={{
+                        width: "70%",
+                        height: 50,
+                        alignItems: "center",
+                        flexDirection: "row"
                       }}
-                      size="small"
-                      rounded
-                    />
-                    <Text style={{ fontWeight: "bold", marginLeft: 10 }}>
-                      {this.props.navigation.getParam("user").name}
-                    </Text>
-                  </TouchableOpacity>
+                      onPress={() =>
+                        this.props.navigation.navigate("Profile", {
+                          user: this.props.navigation.getParam("user")
+                        })
+                      }
+                      disabled={true}
+                    >
+                      <Avatar
+                        source={{
+                          uri: this.props.navigation.getParam("user").avatar
+                        }}
+                        size="small"
+                        rounded
+                      />
+                      <Text style={{ fontWeight: "bold", marginLeft: 10 }}>
+                        {this.props.navigation.getParam("user").name}
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
                 </View>
               </View>
-            </View>
-            <GiftedChat
-              messages={this.state.messages}
-              showUserAvatar={true}
-              onSend={messages => this.onSend(messages)}
-              user={this.state.currentUser}
-              renderUsernameOnMessage={true}
-            />
-          </KeyboardAvoidingView>
+              <GiftedChat
+                messages={this.state.messages}
+                showUserAvatar={true}
+                onSend={messages => this.onSend(messages)}
+                user={this.state.currentUser}
+                renderUsernameOnMessage={true}
+              />
+            </KeyboardAvoidingView>
+          </ImageBackground>
         )}
       </SafeAreaView>
     );

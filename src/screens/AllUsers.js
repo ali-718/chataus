@@ -5,7 +5,8 @@ import {
   SafeAreaView,
   ScrollView,
   TouchableOpacity,
-  BackHandler
+  BackHandler,
+  ImageBackground
 } from "react-native";
 import {
   Container,
@@ -188,7 +189,10 @@ class Users extends Component {
             <Spinner color="blue" size="large" />
           </View>
         ) : (
-          <View style={{ width: "100%", flex: 1 }}>
+          <ImageBackground
+            source={require("../assets/Message.png")}
+            style={{ width: "100%", flex: 1 }}
+          >
             <View
               style={{
                 width: "100%",
@@ -334,7 +338,7 @@ class Users extends Component {
                 })}
               </List>
             </ScrollView>
-          </View>
+          </ImageBackground>
         )}
       </SafeAreaView>
     );

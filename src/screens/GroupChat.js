@@ -8,7 +8,8 @@ import {
   Text,
   SafeAreaView,
   BackHandler,
-  ScrollView
+  ScrollView,
+  ImageBackground
 } from "react-native";
 import {
   Icon,
@@ -222,191 +223,196 @@ export default class GroupChat extends React.Component {
             <Spinner color="blue" size="large" />
           </View>
         ) : (
-          <KeyboardAvoidingView
-            behavior="padding"
-            enabled={true}
+          <ImageBackground
+            source={require("../assets/Message.png")}
             style={{ width: "100%", flex: 1 }}
           >
-            {/* Complain modal starts */}
-            <Modal
-              isVisible={this.state.visibleModal}
-              animationIn="slideInLeft"
-              animationOut="slideOutRight"
-              style={{ paddingTop: 30, paddingBottom: 30 }}
+            <KeyboardAvoidingView
+              behavior="padding"
+              enabled={true}
+              style={{ width: "100%", flex: 1 }}
             >
-              {this.state.isLoading ? (
-                <View
-                  style={{
-                    width: "100%",
-                    borderRadius: 20,
-                    backgroundColor: "white",
-                    padding: 20
-                  }}
-                >
-                  <Spinner color="blue" size="large" />
-                </View>
-              ) : (
-                <View
-                  style={{
-                    width: "100%",
-                    borderRadius: 20,
-                    backgroundColor: "white",
-                    padding: 20
-                  }}
-                >
-                  <Text style={{ fontSize: 20, fontWeight: "bold" }}>
-                    {this.state.user.name}
-                  </Text>
-                  <Text style={{ marginTop: 30 }}>Members</Text>
-                  <ScrollView
-                    style={{ width: "100%", marginTop: 10, height: 300 }}
-                    showsVerticalScrollIndicator={false}
-                  >
-                    <List>
-                      {this.state.user.members.map(item => (
-                        <ListItem key={item.id} avatar>
-                          <Left>
-                            <Thumbnail
-                              source={{
-                                uri: item.avatar
-                              }}
-                            />
-                          </Left>
-                          <Body>
-                            <Text style={{ fontWeight: "bold" }}>
-                              {item.name}
-                            </Text>
-                            <Text note>
-                              {item.shortMessage ? item.shortMessage : ""}
-                              {item.shortMessage
-                                ? item.shortMessage.length < 35
-                                  ? "\n"
-                                  : ""
-                                : "\n"}
-                            </Text>
-                          </Body>
-                          <Right>
-                            <Text>3:43 pm</Text>
-                          </Right>
-                        </ListItem>
-                      ))}
-                    </List>
-                  </ScrollView>
+              {/* Complain modal starts */}
+              <Modal
+                isVisible={this.state.visibleModal}
+                animationIn="slideInLeft"
+                animationOut="slideOutRight"
+                style={{ paddingTop: 30, paddingBottom: 30 }}
+              >
+                {this.state.isLoading ? (
                   <View
                     style={{
-                      marginTop: 50,
                       width: "100%",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      paddingBottom: 10
+                      borderRadius: 20,
+                      backgroundColor: "white",
+                      padding: 20
                     }}
                   >
-                    <Button
-                      onPress={() => this.setState({ visibleModal: false })}
-                      style={{
-                        width: "30%",
-                        justifyContent: "center",
-                        alignItems: "center"
-                      }}
-                      rounded
-                      danger
-                    >
-                      <Text style={{ color: "white" }}>close</Text>
-                    </Button>
+                    <Spinner color="blue" size="large" />
                   </View>
-                </View>
-              )}
-            </Modal>
-            {/* Complain Modal Ends */}
-            {console.log(this.state)}
-            <View
-              style={{
-                width: "100%",
-                height: 50,
-                justifyContent: "center",
-                borderBottomWidth: Platform.OS == "ios" ? 0.2 : 0,
-                borderBottomColor: "gainsboro",
-                borderStyle: "solid",
-                shadowColor: "#000",
-                shadowOffset: {
-                  width: 0,
-                  height: 1
-                },
-                shadowOpacity: 0.18,
-                shadowRadius: 1.0,
-
-                elevation: 1
-              }}
-            >
+                ) : (
+                  <View
+                    style={{
+                      width: "100%",
+                      borderRadius: 20,
+                      backgroundColor: "white",
+                      padding: 20
+                    }}
+                  >
+                    <Text style={{ fontSize: 20, fontWeight: "bold" }}>
+                      {this.state.user.name}
+                    </Text>
+                    <Text style={{ marginTop: 30 }}>Members</Text>
+                    <ScrollView
+                      style={{ width: "100%", marginTop: 10, height: 300 }}
+                      showsVerticalScrollIndicator={false}
+                    >
+                      <List>
+                        {this.state.user.members.map(item => (
+                          <ListItem key={item.id} avatar>
+                            <Left>
+                              <Thumbnail
+                                source={{
+                                  uri: item.avatar
+                                }}
+                              />
+                            </Left>
+                            <Body>
+                              <Text style={{ fontWeight: "bold" }}>
+                                {item.name}
+                              </Text>
+                              <Text note>
+                                {item.shortMessage ? item.shortMessage : ""}
+                                {item.shortMessage
+                                  ? item.shortMessage.length < 35
+                                    ? "\n"
+                                    : ""
+                                  : "\n"}
+                              </Text>
+                            </Body>
+                            <Right>
+                              <Text>3:43 pm</Text>
+                            </Right>
+                          </ListItem>
+                        ))}
+                      </List>
+                    </ScrollView>
+                    <View
+                      style={{
+                        marginTop: 50,
+                        width: "100%",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        paddingBottom: 10
+                      }}
+                    >
+                      <Button
+                        onPress={() => this.setState({ visibleModal: false })}
+                        style={{
+                          width: "30%",
+                          justifyContent: "center",
+                          alignItems: "center"
+                        }}
+                        rounded
+                        danger
+                      >
+                        <Text style={{ color: "white" }}>close</Text>
+                      </Button>
+                    </View>
+                  </View>
+                )}
+              </Modal>
+              {/* Complain Modal Ends */}
+              {console.log(this.state)}
               <View
                 style={{
-                  width: "90%",
+                  width: "100%",
                   height: 50,
-                  justifyContent: "center"
+                  justifyContent: "center",
+                  borderBottomWidth: Platform.OS == "ios" ? 0.2 : 0,
+                  borderBottomColor: "gainsboro",
+                  borderStyle: "solid",
+                  shadowColor: "#000",
+                  shadowOffset: {
+                    width: 0,
+                    height: 1
+                  },
+                  shadowOpacity: 0.18,
+                  shadowRadius: 1.0,
+
+                  elevation: 1
                 }}
               >
                 <View
                   style={{
-                    width: "100%",
-                    flexDirection: "row",
-                    height: 50
+                    width: "90%",
+                    height: 50,
+                    justifyContent: "center"
                   }}
                 >
-                  <TouchableOpacity
+                  <View
                     style={{
-                      width: "20%",
-                      height: 50,
-                      alignItems: "center",
-                      justifyContent: "center",
-                      flexDirection: "row"
+                      width: "100%",
+                      flexDirection: "row",
+                      height: 50
                     }}
-                    onPress={() => this.props.navigation.goBack()}
                   >
-                    <View
+                    <TouchableOpacity
                       style={{
-                        width: "100%",
-                        height: 20,
+                        width: "20%",
+                        height: 50,
                         alignItems: "center",
-                        justifyContent: "center"
+                        justifyContent: "center",
+                        flexDirection: "row"
+                      }}
+                      onPress={() => this.props.navigation.goBack()}
+                    >
+                      <View
+                        style={{
+                          width: "100%",
+                          height: 20,
+                          alignItems: "center",
+                          justifyContent: "center"
+                        }}
+                      >
+                        <Icon
+                          name="arrowleft"
+                          type="AntDesign"
+                          style={{ fontSize: 25 }}
+                        />
+                      </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={() => this.setState({ visibleModal: true })}
+                      style={{
+                        width: "70%",
+                        height: 50,
+                        alignItems: "center",
+                        flexDirection: "row"
                       }}
                     >
-                      <Icon
-                        name="arrowleft"
-                        type="AntDesign"
-                        style={{ fontSize: 25 }}
+                      <Avatar
+                        source={{
+                          uri: this.props.navigation.getParam("user").avatar
+                        }}
+                        size="small"
+                        rounded
                       />
-                    </View>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={() => this.setState({ visibleModal: true })}
-                    style={{
-                      width: "70%",
-                      height: 50,
-                      alignItems: "center",
-                      flexDirection: "row"
-                    }}
-                  >
-                    <Avatar
-                      source={{
-                        uri: this.props.navigation.getParam("user").avatar
-                      }}
-                      size="small"
-                      rounded
-                    />
-                    <Text style={{ fontWeight: "bold", marginLeft: 10 }}>
-                      {this.props.navigation.getParam("user").name}
-                    </Text>
-                  </TouchableOpacity>
+                      <Text style={{ fontWeight: "bold", marginLeft: 10 }}>
+                        {this.props.navigation.getParam("user").name}
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
                 </View>
               </View>
-            </View>
-            <GiftedChat
-              messages={this.state.messages}
-              showUserAvatar={true}
-              onSend={messages => this.onSend(messages)}
-              user={this.state.user}
-            />
-          </KeyboardAvoidingView>
+              <GiftedChat
+                messages={this.state.messages}
+                showUserAvatar={true}
+                onSend={messages => this.onSend(messages)}
+                user={this.state.user}
+              />
+            </KeyboardAvoidingView>
+          </ImageBackground>
         )}
       </SafeAreaView>
     );

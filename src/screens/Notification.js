@@ -5,7 +5,8 @@ import {
   SafeAreaView,
   ScrollView,
   TouchableOpacity,
-  BackHandler
+  BackHandler,
+  ImageBackground
 } from "react-native";
 import {
   Container,
@@ -265,46 +266,50 @@ class NotificationsList extends Component {
             <Spinner color="blue" size="large" />
           </View>
         ) : (
-          <View style={{ width: "100%", flex: 1 }}>
-            <View
-              style={{
-                width: "100%",
-                height: 50,
-                backgroundColor: "white",
-                alignItems: "center",
-                flexDirection: "row",
-
-                shadowColor: "#000",
-                shadowOffset: {
-                  width: 0,
-                  height: 1
-                },
-                shadowOpacity: 0.18,
-                shadowRadius: 1.0,
-
-                elevation: 1
-              }}
-            >
-              <TouchableOpacity
-                style={{
-                  width: "20%",
-                  justifyContent: "center",
-                  alignItems: "center"
-                }}
-                onPress={() => this.props.navigation.toggleDrawer()}
-              >
-                <Icon name="ios-menu" style={{ color: "black" }} />
-              </TouchableOpacity>
+          <ImageBackground
+            source={require("../assets/Message.png")}
+            style={{ width: "100%", flex: 1 }}
+          >
+            <View style={{ width: "100%", flex: 1 }}>
               <View
                 style={{
-                  width: "80%"
+                  width: "100%",
+                  height: 50,
+                  backgroundColor: "white",
+                  alignItems: "center",
+                  flexDirection: "row",
+
+                  shadowColor: "#000",
+                  shadowOffset: {
+                    width: 0,
+                    height: 1
+                  },
+                  shadowOpacity: 0.18,
+                  shadowRadius: 1.0,
+
+                  elevation: 1
                 }}
               >
-                <Text style={{ color: "black", fontSize: 22 }}>
-                  Notifications
-                </Text>
-              </View>
-              {/* {this.state.PressLong !== "" &&
+                <TouchableOpacity
+                  style={{
+                    width: "20%",
+                    justifyContent: "center",
+                    alignItems: "center"
+                  }}
+                  onPress={() => this.props.navigation.toggleDrawer()}
+                >
+                  <Icon name="ios-menu" style={{ color: "black" }} />
+                </TouchableOpacity>
+                <View
+                  style={{
+                    width: "80%"
+                  }}
+                >
+                  <Text style={{ color: "black", fontSize: 22 }}>
+                    Notifications
+                  </Text>
+                </View>
+                {/* {this.state.PressLong !== "" &&
               this.props.user.user.status == "admin" ? (
                 <TouchableOpacity
                   style={{
@@ -335,7 +340,7 @@ class NotificationsList extends Component {
                   )}
                 </TouchableOpacity>
               ) : null} */}
-              {/* {this.state.PressLong !== "" ? (
+                {/* {this.state.PressLong !== "" ? (
                 <TouchableOpacity
                   style={{
                     width: "20%",
@@ -355,102 +360,12 @@ class NotificationsList extends Component {
                   <Text style={{ fontSize: 10 }}>Delete</Text>
                 </TouchableOpacity>
               ) : null} */}
-            </View>
-            {this.state.users.length > 0 ? (
-              <ScrollView style={{ width: "100%", flex: 1 }}>
-                <List style={{ paddingTop: -20 }}>
-                  {this.state.users.map((item, i) => {
-                    if (item.group) {
-                      return (
-                        <TouchableOpacity
-                          key={i}
-                          style={{
-                            width: "100%",
-                            height: 60,
-                            flexDirection: "row",
-                            marginTop: 20,
-                            borderWidth:
-                              this.state.PressLong == item.id ? 1 : 0,
-                            borderColor: this.state.backgroundColor,
-                            borderStyle: "solid"
-                          }}
-                          //   onLongPress={() => {
-                          //     if (this.state.currentUser.status == "admin") {
-                          //       if (
-                          //         this.state.PressLong == "" &&
-                          //         this.state.currentUser.status == "admin"
-                          //       ) {
-                          //         this.setState({
-                          //           PressLong: item.id,
-                          //           backgroundColor: "gray"
-                          //         });
-
-                          //         this.PressLong(item.id);
-                          //       } else {
-                          //         this.props.navigation.replace("Home");
-                          //       }
-                          //     }
-
-                          // alert(item.id)
-                          //   }}
-
-                          onPress={() => {
-                            if (this.state.PressLong == "") {
-                              this.props.navigation.navigate("GroupChat", {
-                                user: item.user
-                              });
-                            } else {
-                              this.props.navigation.replace("Home");
-                              this.setState({
-                                PressLong: "",
-                                backgroundColor: ""
-                              });
-                            }
-                          }}
-                        >
-                          <View
-                            style={{
-                              width: "20%",
-                              justifyContent: "center",
-                              alignItems: "center"
-                            }}
-                          >
-                            <Thumbnail
-                              source={{
-                                uri: item.user.avatar
-                              }}
-                            />
-                          </View>
-                          <View
-                            style={{
-                              width: "60%",
-                              justifyContent: "center",
-                              paddingLeft: 10
-                              // borderBottomColor: "gainsboro",
-                              // borderBottomWidth: 0.5,
-                              // borderStyle: "solid"
-                            }}
-                          >
-                            {item.group ? (
-                              <Text>You have New Message in Group</Text>
-                            ) : (
-                              <View style={{ flexDirection: "row" }}>
-                                <Text>You have a new message from</Text>
-                                <Text style={{ fontWeight: "bold" }}>
-                                  {" "}
-                                  {item.user.name}
-                                </Text>
-                              </View>
-                            )}
-
-                            {/* <Text style={{ marginTop: 5, color: "grey" }}>
-                                  {item.shortMessage}
-                                </Text> */}
-                          </View>
-                        </TouchableOpacity>
-                      );
-                    } else {
-                      if (item.recieverId == f.auth().currentUser.uid) {
+              </View>
+              {this.state.users.length > 0 ? (
+                <ScrollView style={{ width: "100%", flex: 1 }}>
+                  <List style={{ paddingTop: -20 }}>
+                    {this.state.users.map((item, i) => {
+                      if (item.group) {
                         return (
                           <TouchableOpacity
                             key={i}
@@ -486,7 +401,7 @@ class NotificationsList extends Component {
 
                             onPress={() => {
                               if (this.state.PressLong == "") {
-                                this.props.navigation.navigate("Chat", {
+                                this.props.navigation.navigate("GroupChat", {
                                   user: item.user
                                 });
                               } else {
@@ -522,11 +437,7 @@ class NotificationsList extends Component {
                               }}
                             >
                               {item.group ? (
-                                <Text
-                                  style={{ fontSize: 18, fontWeight: "400" }}
-                                >
-                                  New Message in Group
-                                </Text>
+                                <Text>You have New Message in Group</Text>
                               ) : (
                                 <View style={{ flexDirection: "row" }}>
                                   <Text>You have a new message from</Text>
@@ -538,31 +449,126 @@ class NotificationsList extends Component {
                               )}
 
                               {/* <Text style={{ marginTop: 5, color: "grey" }}>
-                              {item.shortMessage}
-                            </Text> */}
+                                  {item.shortMessage}
+                                </Text> */}
                             </View>
                           </TouchableOpacity>
                         );
+                      } else {
+                        if (item.recieverId == f.auth().currentUser.uid) {
+                          return (
+                            <TouchableOpacity
+                              key={i}
+                              style={{
+                                width: "100%",
+                                height: 60,
+                                flexDirection: "row",
+                                marginTop: 20,
+                                borderWidth:
+                                  this.state.PressLong == item.id ? 1 : 0,
+                                borderColor: this.state.backgroundColor,
+                                borderStyle: "solid"
+                              }}
+                              //   onLongPress={() => {
+                              //     if (this.state.currentUser.status == "admin") {
+                              //       if (
+                              //         this.state.PressLong == "" &&
+                              //         this.state.currentUser.status == "admin"
+                              //       ) {
+                              //         this.setState({
+                              //           PressLong: item.id,
+                              //           backgroundColor: "gray"
+                              //         });
+
+                              //         this.PressLong(item.id);
+                              //       } else {
+                              //         this.props.navigation.replace("Home");
+                              //       }
+                              //     }
+
+                              // alert(item.id)
+                              //   }}
+
+                              onPress={() => {
+                                if (this.state.PressLong == "") {
+                                  this.props.navigation.navigate("Chat", {
+                                    user: item.user
+                                  });
+                                } else {
+                                  this.props.navigation.replace("Home");
+                                  this.setState({
+                                    PressLong: "",
+                                    backgroundColor: ""
+                                  });
+                                }
+                              }}
+                            >
+                              <View
+                                style={{
+                                  width: "20%",
+                                  justifyContent: "center",
+                                  alignItems: "center"
+                                }}
+                              >
+                                <Thumbnail
+                                  source={{
+                                    uri: item.user.avatar
+                                  }}
+                                />
+                              </View>
+                              <View
+                                style={{
+                                  width: "60%",
+                                  justifyContent: "center",
+                                  paddingLeft: 10
+                                  // borderBottomColor: "gainsboro",
+                                  // borderBottomWidth: 0.5,
+                                  // borderStyle: "solid"
+                                }}
+                              >
+                                {item.group ? (
+                                  <Text
+                                    style={{ fontSize: 18, fontWeight: "400" }}
+                                  >
+                                    New Message in Group
+                                  </Text>
+                                ) : (
+                                  <View style={{ flexDirection: "row" }}>
+                                    <Text>You have a new message from</Text>
+                                    <Text style={{ fontWeight: "bold" }}>
+                                      {" "}
+                                      {item.user.name}
+                                    </Text>
+                                  </View>
+                                )}
+
+                                {/* <Text style={{ marginTop: 5, color: "grey" }}>
+                              {item.shortMessage}
+                            </Text> */}
+                              </View>
+                            </TouchableOpacity>
+                          );
+                        }
                       }
-                    }
-                  })}
-                </List>
-              </ScrollView>
-            ) : (
-              <View
-                style={{
-                  width: "100%",
-                  flex: 1,
-                  justifyContent: "center",
-                  alignItems: "center"
-                }}
-              >
-                <Text style={{ fontSize: 15 }}>
-                  No Notifications Available...!
-                </Text>
-              </View>
-            )}
-          </View>
+                    })}
+                  </List>
+                </ScrollView>
+              ) : (
+                <View
+                  style={{
+                    width: "100%",
+                    flex: 1,
+                    justifyContent: "center",
+                    alignItems: "center"
+                  }}
+                >
+                  <Text style={{ fontSize: 15 }}>
+                    No Notifications Available...!
+                  </Text>
+                </View>
+              )}
+            </View>
+          </ImageBackground>
         )}
       </SafeAreaView>
     );

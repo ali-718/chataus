@@ -5,7 +5,8 @@ import {
   SafeAreaView,
   KeyboardAvoidingView,
   Platform,
-  TouchableOpacity
+  TouchableOpacity,
+  ImageBackground
 } from "react-native";
 import {
   Input,
