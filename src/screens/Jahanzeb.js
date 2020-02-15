@@ -8,7 +8,8 @@ import {
   TouchableOpacity,
   ScrollView,
   ActivityIndicator,
-  ImageBackground
+  ImageBackground,
+  Linking
 } from "react-native";
 import { Avatar } from "react-native-elements";
 import * as f from "firebase";
@@ -118,6 +119,40 @@ export default class Jahanzeb extends Component {
                 >
                   {this.state.user.description}
                 </Text>
+                <TouchableOpacity
+                  onPress={() => {
+                    Linking.openURL(
+                      this.state.user.linkedin || "https://www.linkedin.com/"
+                    );
+                  }}
+                  style={{
+                    backgroundColor: "#0077B5",
+                    width: "80%",
+                    height: 40,
+                    alignItems: "center",
+                    justifyContent: "center",
+                    borderRadius: 5,
+                    marginTop: 20,
+                    flexDirection: "row"
+                  }}
+                >
+                  <Icon
+                    name="linkedin"
+                    type="Entypo"
+                    style={{ color: "white" }}
+                  />
+                  <Text
+                    style={{
+                      color: "white",
+                      fontWeight: "bold",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      marginLeft: 20
+                    }}
+                  >
+                    Linkedin Profile
+                  </Text>
+                </TouchableOpacity>
                 {f.auth().currentUser.uid ==
                 "8EUklVEpmFePkbHGnCxctKMyzB92" ? null : (
                   <TouchableOpacity
@@ -125,10 +160,10 @@ export default class Jahanzeb extends Component {
                       padding: 10,
                       alignItems: "center",
                       justifyContent: "center",
-                      backgroundColor: "blue",
+                      backgroundColor: "#6a5acd",
                       width: "80%",
-                      borderRadius: 10,
-                      marginTop: 20
+                      borderRadius: 5,
+                      marginTop: 10
                     }}
                     onPress={() =>
                       this.props.navigation.navigate("Chat", {
@@ -178,10 +213,6 @@ export default class Jahanzeb extends Component {
                 <Item style={{ width: "90%", marginTop: 20 }} floatingLabel>
                   <Label>Base Education</Label>
                   <Input multiline disabled value={this.state.user.education} />
-                </Item>
-                <Item style={{ width: "90%", marginTop: 20 }} floatingLabel>
-                  <Label>Linkedin Profile</Label>
-                  <Input disabled value={this.state.user.linkedin} />
                 </Item>
               </View>
             </ScrollView>

@@ -5,7 +5,8 @@ import {
   Image,
   BackHandler,
   TextInput,
-  TouchableOpacity
+  TouchableOpacity,
+  ImageBackground
 } from "react-native";
 import { Icon, Spinner } from "native-base";
 import * as Facebook from "expo-facebook";
@@ -208,160 +209,165 @@ class Login extends Component {
           alignItems: "center"
         }}
       >
-        <Image source={Logo} style={{ width: 100, height: 100 }} />
-        <View style={{ width: "100%", marginTop: 50, alignItems: "center" }}>
-          <TextInput
-            onChangeText={val => {
-              this.setState({ Email: val });
-            }}
-            value={this.state.Email}
-            style={{
-              borderWidth: 1,
-              width: "80%",
-              borderRadius: 5,
-              backgroundColor: "rgba(220,220,220,0.3)",
-              marginTop: 10,
-              height: 50,
-              fontSize: 20,
-              paddingLeft: 10
-            }}
-            autoCapitalize="none"
-            placeholder="Username or Email"
-            placeholderTextColor="#A9A9A9"
-          />
-          <TextInput
-            onChangeText={val => {
-              this.setState({ Password: val });
-            }}
-            autoCapitalize="none"
-            value={this.state.Password}
-            style={{
-              borderWidth: 1,
-              width: "80%",
-              borderRadius: 5,
-              backgroundColor: "rgba(220,220,220,0.3)",
-              marginTop: 10,
-              height: 50,
-              fontSize: 20,
-              paddingLeft: 10
-            }}
-            placeholder="Password"
-            placeholderTextColor="#A9A9A9"
-            secureTextEntry
-          />
-          <View style={{ width: "80%", alignItems: "flex-end" }}>
-            <TouchableOpacity
-              onPress={() => this.props.navigation.navigate("Forgot")}
-            >
-              <Text>Forgot Password ?</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-        <View style={{ marginTop: 20, width: "100%", alignItems: "center" }}>
-          <TouchableOpacity
-            onPress={() => this.SimpleLogin()}
-            style={{
-              backgroundColor: "#00247d",
-              width: "80%",
-              height: 40,
-              alignItems: "center",
-              justifyContent: "center",
-              borderRadius: 5,
-              marginTop: 10,
-              marginBottom: 10
-            }}
-          >
-            <Text style={{ color: "white", fontWeight: "bold" }}>Login</Text>
-          </TouchableOpacity>
-          <Text>OR</Text>
-          <TouchableOpacity
-            onPress={() => this.FacebookLogin()}
-            style={{
-              backgroundColor: "#00247d",
-              width: "80%",
-              height: 40,
-              alignItems: "center",
-              justifyContent: "center",
-              borderRadius: 5,
-              marginTop: 10,
-              flexDirection: "row"
-            }}
-          >
-            <Icon
-              name="facebook-square"
-              type="FontAwesome"
-              style={{ color: "white" }}
-            />
-            <Text
+        <ImageBackground
+          source={require("../assets/Message.png")}
+          style={{ width: "100%", flex: 1 }}
+        >
+          <Image source={Logo} style={{ width: 100, height: 100 }} />
+          <View style={{ width: "100%", marginTop: 50, alignItems: "center" }}>
+            <TextInput
+              onChangeText={val => {
+                this.setState({ Email: val });
+              }}
+              value={this.state.Email}
               style={{
-                color: "white",
-                fontWeight: "bold",
+                borderWidth: 1,
+                width: "80%",
+                borderRadius: 5,
+                backgroundColor: "rgba(220,220,220,0.3)",
+                marginTop: 10,
+                height: 50,
+                fontSize: 20,
+                paddingLeft: 10
+              }}
+              autoCapitalize="none"
+              placeholder="Username or Email"
+              placeholderTextColor="#A9A9A9"
+            />
+            <TextInput
+              onChangeText={val => {
+                this.setState({ Password: val });
+              }}
+              autoCapitalize="none"
+              value={this.state.Password}
+              style={{
+                borderWidth: 1,
+                width: "80%",
+                borderRadius: 5,
+                backgroundColor: "rgba(220,220,220,0.3)",
+                marginTop: 10,
+                height: 50,
+                fontSize: 20,
+                paddingLeft: 10
+              }}
+              placeholder="Password"
+              placeholderTextColor="#A9A9A9"
+              secureTextEntry
+            />
+            <View style={{ width: "80%", alignItems: "flex-end" }}>
+              <TouchableOpacity
+                onPress={() => this.props.navigation.navigate("Forgot")}
+              >
+                <Text>Forgot Password ?</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+          <View style={{ marginTop: 20, width: "100%", alignItems: "center" }}>
+            <TouchableOpacity
+              onPress={() => this.SimpleLogin()}
+              style={{
+                backgroundColor: "#00247d",
+                width: "80%",
+                height: 40,
                 alignItems: "center",
                 justifyContent: "center",
-                marginLeft: 20
+                borderRadius: 5,
+                marginTop: 10,
+                marginBottom: 10
               }}
             >
-              Continue with Facebook
-            </Text>
-          </TouchableOpacity>
-
-          <View
-            style={{
-              width: "80%",
-              flexDirection: "row",
-              justifyContent: "center",
-              marginTop: 10
-            }}
-          >
-            <Text style={{ color: "grey" }}>Don't have an account ? </Text>
-            <TouchableOpacity
-              onPress={() => this.props.navigation.navigate("Register")}
-            >
-              <Text style={{ color: "#00247d" }}>Signup</Text>
+              <Text style={{ color: "white", fontWeight: "bold" }}>Login</Text>
             </TouchableOpacity>
+            <Text>OR</Text>
+            <TouchableOpacity
+              onPress={() => this.FacebookLogin()}
+              style={{
+                backgroundColor: "#00247d",
+                width: "80%",
+                height: 40,
+                alignItems: "center",
+                justifyContent: "center",
+                borderRadius: 5,
+                marginTop: 10,
+                flexDirection: "row"
+              }}
+            >
+              <Icon
+                name="facebook-square"
+                type="FontAwesome"
+                style={{ color: "white" }}
+              />
+              <Text
+                style={{
+                  color: "white",
+                  fontWeight: "bold",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  marginLeft: 20
+                }}
+              >
+                Continue with Facebook
+              </Text>
+            </TouchableOpacity>
+
+            <View
+              style={{
+                width: "80%",
+                flexDirection: "row",
+                justifyContent: "center",
+                marginTop: 10
+              }}
+            >
+              <Text style={{ color: "grey" }}>Don't have an account ? </Text>
+              <TouchableOpacity
+                onPress={() => this.props.navigation.navigate("Register")}
+              >
+                <Text style={{ color: "#00247d" }}>Signup</Text>
+              </TouchableOpacity>
+            </View>
+            {this.state.isLoading ? (
+              <Spinner color="blue" style={{ marginTop: 20 }} />
+            ) : null}
           </View>
-          {this.state.isLoading ? (
-            <Spinner color="blue" style={{ marginTop: 20 }} />
-          ) : null}
-        </View>
 
-        {/* Error Login starts */}
-        <AwesomeAlert
-          show={this.state.showAlert}
-          showProgress={false}
-          title="Error"
-          message="Wrong email or password!"
-          closeOnTouchOutside={true}
-          closeOnHardwareBackPress={false}
-          showCancelButton={true}
-          showConfirmButton={false}
-          cancelText="Ok"
-          cancelButtonColor="red"
-          cancelButtonStyle={{ width: 50, alignItems: "center" }}
-          onCancelPressed={() => {
-            this.hideAlert();
-          }}
-        />
-        {/* Error login fails */}
+          {/* Error Login starts */}
+          <AwesomeAlert
+            show={this.state.showAlert}
+            showProgress={false}
+            title="Error"
+            message="Wrong email or password!"
+            closeOnTouchOutside={true}
+            closeOnHardwareBackPress={false}
+            showCancelButton={true}
+            showConfirmButton={false}
+            cancelText="Ok"
+            cancelButtonColor="red"
+            cancelButtonStyle={{ width: 50, alignItems: "center" }}
+            onCancelPressed={() => {
+              this.hideAlert();
+            }}
+          />
+          {/* Error login fails */}
 
-        {/* Error fill all fields starts */}
-        <AwesomeAlert
-          show={this.state.showAlert2}
-          showProgress={false}
-          title="Error"
-          message="Please fill all fields...!"
-          closeOnTouchOutside={true}
-          closeOnHardwareBackPress={false}
-          showCancelButton={true}
-          showConfirmButton={false}
-          cancelText="Ok"
-          cancelButtonColor="red"
-          cancelButtonStyle={{ width: 50, alignItems: "center" }}
-          onCancelPressed={() => {
-            this.hideAlert2();
-          }}
-        />
-        {/* Error fill all fields starts */}
+          {/* Error fill all fields starts */}
+          <AwesomeAlert
+            show={this.state.showAlert2}
+            showProgress={false}
+            title="Error"
+            message="Please fill all fields...!"
+            closeOnTouchOutside={true}
+            closeOnHardwareBackPress={false}
+            showCancelButton={true}
+            showConfirmButton={false}
+            cancelText="Ok"
+            cancelButtonColor="red"
+            cancelButtonStyle={{ width: 50, alignItems: "center" }}
+            onCancelPressed={() => {
+              this.hideAlert2();
+            }}
+          />
+          {/* Error fill all fields starts */}
+        </ImageBackground>
       </View>
     );
   }

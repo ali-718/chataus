@@ -262,6 +262,7 @@ class Edit extends Component {
     let address = this.state.user.address ? this.state.user.address.trim() : "";
     let House = this.state.houseid;
     let Area = this.state.areaid;
+    let linkedin = this.state.linkedin ? this.state.linkedin.trim() : "";
 
     if (avatar != "" && name != "" && description && phone !== "") {
       this.setState({
