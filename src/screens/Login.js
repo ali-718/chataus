@@ -10,11 +10,12 @@ import {
 } from "react-native";
 import { Icon, Spinner } from "native-base";
 import * as Facebook from "expo-facebook";
-import Logo from "../assets/logo.png";
+import Logo from "../../assets/logo.png";
 import * as f from "firebase";
 import { connect } from "react-redux";
 import { LoginAction } from "../actions/userAction";
 import AwesomeAlert from "react-native-awesome-alerts";
+import Linkedin from "../../assets/linkedin.png";
 
 class Login extends Component {
   state = {
@@ -211,7 +212,12 @@ class Login extends Component {
       >
         <ImageBackground
           source={require("../assets/Message.png")}
-          style={{ width: "100%", flex: 1 }}
+          style={{
+            width: "100%",
+            flex: 1,
+            alignItems: "center",
+            justifyContent: "center"
+          }}
         >
           <Image source={Logo} style={{ width: 100, height: 100 }} />
           <View style={{ width: "100%", marginTop: 50, alignItems: "center" }}>
@@ -268,7 +274,7 @@ class Login extends Component {
               style={{
                 backgroundColor: "#00247d",
                 width: "80%",
-                height: 40,
+                height: 50,
                 alignItems: "center",
                 justifyContent: "center",
                 borderRadius: 5,
@@ -282,7 +288,6 @@ class Login extends Component {
             <TouchableOpacity
               onPress={() => this.FacebookLogin()}
               style={{
-                backgroundColor: "#00247d",
                 width: "80%",
                 height: 40,
                 alignItems: "center",
@@ -292,22 +297,10 @@ class Login extends Component {
                 flexDirection: "row"
               }}
             >
-              <Icon
-                name="facebook-square"
-                type="FontAwesome"
-                style={{ color: "white" }}
+              <Image
+                style={{ width: "100%", height: 50, borderRadius: 5 }}
+                source={Linkedin}
               />
-              <Text
-                style={{
-                  color: "white",
-                  fontWeight: "bold",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  marginLeft: 20
-                }}
-              >
-                Continue with Facebook
-              </Text>
             </TouchableOpacity>
 
             <View
