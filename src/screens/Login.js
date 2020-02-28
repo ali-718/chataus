@@ -284,25 +284,6 @@ class Login extends Component {
             >
               <Text style={{ color: "white", fontWeight: "bold" }}>Login</Text>
             </TouchableOpacity>
-            <Text>OR</Text>
-            <TouchableOpacity
-              onPress={() => this.FacebookLogin()}
-              style={{
-                width: "80%",
-                height: 40,
-                alignItems: "center",
-                justifyContent: "center",
-                borderRadius: 5,
-                marginTop: 10,
-                flexDirection: "row"
-              }}
-            >
-              <Image
-                style={{ width: "100%", height: 50, borderRadius: 5 }}
-                source={Linkedin}
-              />
-            </TouchableOpacity>
-
             <View
               style={{
                 width: "80%",
