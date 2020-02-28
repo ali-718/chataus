@@ -179,6 +179,7 @@ class Home extends Component {
   }
 
   backPress = () => {
+    BackHandler.exitApp();
     return true;
   };
 

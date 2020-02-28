@@ -9,7 +9,8 @@ import {
   ScrollView,
   ActivityIndicator,
   ImageBackground,
-  Linking
+  Linking,
+  BackHandler
 } from "react-native";
 import { Avatar } from "react-native-elements";
 import * as f from "firebase";
@@ -32,6 +33,10 @@ export default class Obaid extends Component {
   };
 
   componentDidMount() {
+    BackHandler.addEventListener("hardwareBackPress", () => {
+      this.props.navigation.goBack();
+      return true;
+    });
     f.database()
       .ref("users")
       .child("udtE9TOhDxP34FbrLRLFzCRC5E92")

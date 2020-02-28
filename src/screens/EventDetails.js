@@ -1,5 +1,12 @@
 import React, { Component } from "react";
-import { Text, View, ScrollView, Image, ImageBackground } from "react-native";
+import {
+  BackHandler,
+  Text,
+  View,
+  ScrollView,
+  Image,
+  ImageBackground
+} from "react-native";
 import * as f from "firebase";
 import { Icon, Spinner } from "native-base";
 
@@ -9,6 +16,10 @@ export default class EventDetails extends Component {
   };
 
   componentDidMount() {
+    BackHandler.addEventListener("hardwareBackPress", () => {
+      this.props.navigation.goBack();
+      return true;
+    });
     f.database()
       .ref("Events")
       .child(this.props.navigation.getParam("Event"))

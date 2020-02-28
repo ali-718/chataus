@@ -154,9 +154,7 @@ class Register extends Component {
               {/* {console.log(this.props.company)} */}
             </TouchableOpacity>
             <View style={{ width: "80%" }}>
-              <Text style={{ color: "white", fontSize: 22 }}>
-                Reset Password
-              </Text>
+              <Text style={{ color: "black", fontSize: 22 }}>Register</Text>
             </View>
           </View>
           {this.state.isLoading ? (

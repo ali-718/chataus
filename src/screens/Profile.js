@@ -8,7 +8,8 @@ import {
   TouchableOpacity,
   ScrollView,
   ImageBackground,
-  Linking
+  Linking,
+  BackHandler
 } from "react-native";
 import { Avatar } from "react-native-elements";
 import * as f from "firebase";
@@ -31,7 +32,10 @@ export default class Profile extends Component {
 
   componentDidMount() {
     const user = this.props.navigation.getParam("user");
-
+    BackHandler.addEventListener("hardwareBackPress", () => {
+      this.props.navigation.goBack();
+      return true;
+    });
     this.setState({
       user
     });
@@ -99,7 +103,8 @@ export default class Profile extends Component {
               <Text
                 style={{
                   marginTop: 10,
-                  fontSize: 15
+                  fontSize: 15,
+                  textAlign: "center"
                 }}
               >
                 {this.state.user.description}

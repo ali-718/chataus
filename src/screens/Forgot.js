@@ -28,20 +28,6 @@ class Login extends Component {
     showAlert2: false
   };
 
-  componentWillUnmount() {
-    console.log("Home unmount");
-    BackHandler.removeEventListener("hardwareBackPress", this.backPress);
-  }
-
-  componentDidMount() {
-    BackHandler.addEventListener("hardwareBackPress", this.backPress);
-  }
-
-  backPress = () => {
-    BackHandler.exitApp();
-    return true;
-  };
-
   showAlert = () => {
     this.setState({
       showAlert: true
@@ -79,6 +65,13 @@ class Login extends Component {
     }
   };
 
+  componentDidMount() {
+    BackHandler.addEventListener("hardwareBackPress", () => {
+      this.props.navigation.goBack();
+      return true;
+    });
+  }
+
   render() {
     return (
       <ImageBackground
@@ -112,7 +105,7 @@ class Login extends Component {
             {/* {console.log(this.props.company)} */}
           </TouchableOpacity>
           <View style={{ width: "80%" }}>
-            <Text style={{ color: "white", fontSize: 22 }}>Reset Password</Text>
+            <Text style={{ color: "black", fontSize: 22 }}>Reset Password</Text>
           </View>
         </View>
         <View

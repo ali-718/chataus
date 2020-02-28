@@ -30,6 +30,7 @@ import { connect } from "react-redux";
 import { LoginAction } from "../actions/userAction";
 import axios from "axios";
 import { Notifications } from "expo";
+import { BackHandler } from "react-native";
 
 class Edit extends Component {
   state = {
@@ -80,6 +81,16 @@ class Edit extends Component {
     this.setState({
       CameraRoll: statusRoll
     });
+  };
+
+  componentWillUnmount() {
+    console.log("Home unmount");
+    BackHandler.removeEventListener("hardwareBackPress", this.backPress);
+  }
+
+  backPress = () => {
+    this.props.navigation.goBack();
+    return true;
   };
 
   notificationPermission = async () => {
@@ -194,6 +205,7 @@ class Edit extends Component {
   };
 
   componentDidMount() {
+    BackHandler.addEventListener("hardwareBackPress", this.backPress);
     this.checkPermissions();
     this.notificationPermission();
     f.database()

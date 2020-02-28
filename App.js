@@ -30,6 +30,9 @@ import Jahanzeb from "./src/screens/Jahanzeb";
 import Obaid from "./src/screens/Obaid";
 
 export default class App extends Component {
+  componentDidMount() {
+    console.disableYellowBox = true;
+  }
   render() {
     return (
       <Provider store={store}>

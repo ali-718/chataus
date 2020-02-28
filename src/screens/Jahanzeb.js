@@ -32,6 +32,10 @@ export default class Jahanzeb extends Component {
   };
 
   componentDidMount() {
+    BackHandler.addEventListener("hardwareBackPress", () => {
+      this.props.navigation.goBack();
+      return true;
+    });
     f.database()
       .ref("users")
       .child("8EUklVEpmFePkbHGnCxctKMyzB92")

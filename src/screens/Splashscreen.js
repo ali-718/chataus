@@ -12,6 +12,40 @@ class Splashscreen extends Component {
     connection: ""
   };
 
+  didBlurSubscription = this.props.navigation.addListener(
+    "didFocus",
+    async () => {
+      f.auth().onAuthStateChanged(user => {
+        if (user) {
+          console.log(user.uid);
+          f.database()
+            .ref("users")
+            .child(user.uid)
+            .once("value")
+            .then(item => {
+              console.log(item.val());
+              console.log("item val");
+              if (
+                item.val().description &&
+                item.val().phone &&
+                item.val().cnic &&
+                item.val().address
+              ) {
+                this.props.LoginAction(item.val());
+                this.props.navigation.navigate("Home");
+                clearTimeout(this.timer);
+              } else {
+                this.props.LoginAction(item.val());
+                this.props.navigation.navigate("Edit", { fromLogin: true });
+              }
+            });
+        } else {
+          this.props.navigation.navigate("Login");
+        }
+      });
+    }
+  );
+
   componentWillUnmount() {
     console.log("Home unmount");
     BackHandler.removeEventListener("hardwareBackPress", this.backPress);

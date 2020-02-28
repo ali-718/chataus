@@ -179,6 +179,7 @@ class NotificationsList extends Component {
   }
 
   backPress = () => {
+    this.props.navigation.goBack();
     return true;
   };
 

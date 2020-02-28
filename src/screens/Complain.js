@@ -20,6 +20,7 @@ import { Button } from "react-native-elements";
 import { Textarea } from "native-base";
 import * as f from "firebase";
 import { Icon } from "native-base";
+import { BackHandler } from "react-native";
 const uuidv1 = require("uuid/v1");
 export default class Complain extends Component {
   state = {
@@ -214,7 +215,10 @@ export default class Complain extends Component {
 
   componentDidMount() {
     // auth.signOut();
-
+    BackHandler.addEventListener("hardwareBackPress", () => {
+      this.props.navigation.goBack();
+      return true;
+    });
     this.checkPermissions();
 
     const ImageProps = this.props.navigation.getParam("Image", null);
