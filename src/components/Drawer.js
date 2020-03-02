@@ -131,25 +131,45 @@ const NavigationOptions = props => (
         }}
       >
         <ListItem
-          activeOpacity={0.8}
-          onPress={() => props.navigation.navigate("Home")}
+          onPress={() => props.navigation.navigate("Groups")}
           icon
-          style={{ borderBottomWidth: 0 }}
+          style={{ borderBottomWidth: 0, paddingBottom: 20 }}
         >
           <Left>
             <Button
               style={{
-                backgroundColor: "#F7D254",
+                backgroundColor: "#5ABAEE",
                 borderRadius: 100,
                 width: 50,
                 height: 50
               }}
             >
-              <Icon active name="ios-home" style={{ fontSize: 25 }} />
+              <Icon active name="group-work" type="MaterialIcons" />
             </Button>
           </Left>
           <Body style={{ borderBottomWidth: 0, paddingLeft: 10 }}>
-            <Text style={{ fontSize: 20 }}>Home</Text>
+            <Text style={{ fontSize: 20 }}>Chatroom</Text>
+          </Body>
+        </ListItem>
+        <ListItem
+          onPress={() => props.navigation.navigate("AllUser")}
+          icon
+          style={{ borderBottomWidth: 0, marginTop: 20, paddingBottom: 20 }}
+        >
+          <Left>
+            <Button
+              style={{
+                backgroundColor: "#DC70E2",
+                borderRadius: 100,
+                width: 50,
+                height: 50
+              }}
+            >
+              <Icon active name="users" type="Feather" />
+            </Button>
+          </Left>
+          <Body style={{ borderBottomWidth: 0, paddingLeft: 10 }}>
+            <Text style={{ fontSize: 20 }}>All Users</Text>
           </Body>
         </ListItem>
         {props.user.user.status == "admin" ? (
@@ -157,7 +177,7 @@ const NavigationOptions = props => (
             activeOpacity={0.2}
             onPress={() => props.navigation.navigate("Complain")}
             icon
-            style={{ borderBottomWidth: 0, marginTop: 20 }}
+            style={{ borderBottomWidth: 0, marginTop: 20, paddingBottom: 20 }}
           >
             <Left>
               <Button
@@ -179,7 +199,7 @@ const NavigationOptions = props => (
         <ListItem
           onPress={() => props.navigation.navigate("ComplainStatus")}
           icon
-          style={{ borderBottomWidth: 0, marginTop: 20 }}
+          style={{ borderBottomWidth: 0, marginTop: 20, paddingBottom: 20 }}
         >
           <Left>
             <Button
@@ -195,69 +215,6 @@ const NavigationOptions = props => (
           </Left>
           <Body style={{ borderBottomWidth: 0, paddingLeft: 10 }}>
             <Text style={{ fontSize: 20 }}>Events</Text>
-          </Body>
-        </ListItem>
-        <ListItem
-          onPress={() => props.navigation.navigate("AllUser")}
-          icon
-          style={{ borderBottomWidth: 0, marginTop: 20 }}
-        >
-          <Left>
-            <Button
-              style={{
-                backgroundColor: "#DC70E2",
-                borderRadius: 100,
-                width: 50,
-                height: 50
-              }}
-            >
-              <Icon active name="users" type="Feather" />
-            </Button>
-          </Left>
-          <Body style={{ borderBottomWidth: 0, paddingLeft: 10 }}>
-            <Text style={{ fontSize: 20 }}>All Users</Text>
-          </Body>
-        </ListItem>
-        <ListItem
-          onPress={() => props.navigation.navigate("Settings")}
-          icon
-          style={{ borderBottomWidth: 0, marginTop: 20, marginBottom: 10 }}
-        >
-          <Left>
-            <Button
-              style={{
-                backgroundColor: "#6A50E4",
-                borderRadius: 100,
-                width: 50,
-                height: 50
-              }}
-            >
-              <Icon active name="settings" type="Feather" />
-            </Button>
-          </Left>
-          <Body style={{ borderBottomWidth: 0, paddingLeft: 10 }}>
-            <Text style={{ fontSize: 20 }}>Settings</Text>
-          </Body>
-        </ListItem>
-        <ListItem
-          onPress={() => props.navigation.navigate("Groups")}
-          icon
-          style={{ borderBottomWidth: 0, marginTop: 20, paddingBottom: 20 }}
-        >
-          <Left>
-            <Button
-              style={{
-                backgroundColor: "#5ABAEE",
-                borderRadius: 100,
-                width: 50,
-                height: 50
-              }}
-            >
-              <Icon active name="group-work" type="MaterialIcons" />
-            </Button>
-          </Left>
-          <Body style={{ borderBottomWidth: 0, paddingLeft: 10 }}>
-            <Text style={{ fontSize: 20 }}>Groups</Text>
           </Body>
         </ListItem>
         <ListItem
@@ -281,7 +238,27 @@ const NavigationOptions = props => (
             <Text style={{ fontSize: 20 }}>Notifications</Text>
           </Body>
         </ListItem>
-
+        <ListItem
+          onPress={() => props.navigation.navigate("About")}
+          icon
+          style={{ borderBottomWidth: 0, marginTop: 20, paddingBottom: 20 }}
+        >
+          <Left>
+            <Button
+              style={{
+                backgroundColor: "#FFC850",
+                borderRadius: 100,
+                width: 50,
+                height: 50
+              }}
+            >
+              <Icon active name="customerservice" type="AntDesign" />
+            </Button>
+          </Left>
+          <Body style={{ borderBottomWidth: 0, paddingLeft: 10 }}>
+            <Text style={{ fontSize: 20 }}>About us</Text>
+          </Body>
+        </ListItem>
         <ListItem
           onPress={() => props.navigation.navigate("Jahanzeb")}
           icon
@@ -313,6 +290,27 @@ const NavigationOptions = props => (
           </Left>
           <Body style={{ borderBottomWidth: 0, paddingLeft: 10 }}>
             <Text style={{ fontSize: 20 }}>Obaid</Text>
+          </Body>
+        </ListItem>
+        <ListItem
+          onPress={() => props.navigation.navigate("Settings")}
+          icon
+          style={{ borderBottomWidth: 0, marginTop: 10, marginBottom: 10 }}
+        >
+          <Left>
+            <Button
+              style={{
+                backgroundColor: "#6A50E4",
+                borderRadius: 100,
+                width: 50,
+                height: 50
+              }}
+            >
+              <Icon active name="settings" type="Feather" />
+            </Button>
+          </Left>
+          <Body style={{ borderBottomWidth: 0, paddingLeft: 10 }}>
+            <Text style={{ fontSize: 20 }}>Settings</Text>
           </Body>
         </ListItem>
       </View>

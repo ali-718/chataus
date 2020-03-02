@@ -28,6 +28,7 @@ import Notification from "./src/screens/Notification";
 import DataImport from "./src/screens/DataImport";
 import Jahanzeb from "./src/screens/Jahanzeb";
 import Obaid from "./src/screens/Obaid";
+import About from "./src/screens/About";
 
 export default class App extends Component {
   componentDidMount() {
@@ -42,11 +43,30 @@ export default class App extends Component {
   }
 }
 
-const Stack = createStackNavigator(
+const AuthStack = createStackNavigator(
   {
+    Splashscreen: {
+      screen: Splashscreen
+    },
     Login: {
       screen: Login
     },
+
+    Register: {
+      screen: Register
+    },
+    Forgot: {
+      screen: Forgot
+    }
+  },
+  {
+    transitionConfig: () => fromLeft(800),
+    headerMode: "none"
+  }
+);
+
+const Stack = createStackNavigator(
+  {
     Edit: {
       screen: Edit
     },
@@ -56,9 +76,7 @@ const Stack = createStackNavigator(
     Chat: {
       screen: Messages
     },
-    Splashscreen: {
-      screen: Splashscreen
-    },
+
     Settings: {
       screen: Settings
     },
@@ -74,9 +92,7 @@ const Stack = createStackNavigator(
     Groups: {
       screen: Groups
     },
-    Register: {
-      screen: Register
-    },
+
     GroupChat: {
       screen: GroupMessages
     },
@@ -86,9 +102,7 @@ const Stack = createStackNavigator(
     Profile: {
       screen: Profile
     },
-    Forgot: {
-      screen: Forgot
-    },
+
     NotificationsList: {
       screen: Notification
     },
@@ -97,17 +111,25 @@ const Stack = createStackNavigator(
     },
     Obaid: {
       screen: Obaid
+    },
+    About: {
+      screen: About
     }
   },
   {
     headerMode: "none",
-    initialRouteName: "Splashscreen",
     transitionConfig: () => fromLeft(800)
   }
 );
 
 const Drawer = createDrawerNavigator(
   {
+    AuthStack: {
+      screen: AuthStack,
+      navigationOptions: {
+        drawerLockMode: "locked-closed"
+      }
+    },
     Stack: {
       screen: Stack
     }

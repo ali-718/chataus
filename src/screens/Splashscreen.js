@@ -110,6 +110,19 @@ class Splashscreen extends Component {
             <Text style={{ marginTop: 20 }}>{this.state.connection}</Text>
           </View>
         ) : null}
+        <View
+          style={{
+            flex: 0.3,
+            alignItems: "center",
+            justifyContent: "flex-end"
+          }}
+        >
+          <Text style={{ marginTop: 5 }}>Powered by</Text>
+          <Image
+            style={{ width: 130, height: 40 }}
+            source={require("../../assets/company.png")}
+          />
+        </View>
       </View>
     );
   }

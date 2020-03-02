@@ -9,7 +9,8 @@ import {
   ScrollView,
   ActivityIndicator,
   ImageBackground,
-  Linking
+  Linking,
+  BackHandler
 } from "react-native";
 import { Avatar } from "react-native-elements";
 import * as f from "firebase";
