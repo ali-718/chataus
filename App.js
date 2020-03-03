@@ -70,13 +70,15 @@ const Stack = createStackNavigator(
     Edit: {
       screen: Edit
     },
+    Groups: {
+      screen: Groups
+    },
     Home: {
       screen: Home
     },
     Chat: {
       screen: Messages
     },
-
     Settings: {
       screen: Settings
     },
@@ -89,10 +91,6 @@ const Stack = createStackNavigator(
     AllUser: {
       screen: AllUsers
     },
-    Groups: {
-      screen: Groups
-    },
-
     GroupChat: {
       screen: GroupMessages
     },

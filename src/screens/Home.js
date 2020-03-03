@@ -179,7 +179,7 @@ class Home extends Component {
   }
 
   backPress = () => {
-    BackHandler.exitApp();
+    this.props.navigation.goBack();
     return true;
   };
 
@@ -355,9 +355,7 @@ class Home extends Component {
                       : "60%"
                 }}
               >
-                <Text style={{ color: "black", fontSize: 22 }}>
-                  Aus Pro Network
-                </Text>
+                <Text style={{ color: "black", fontSize: 22 }}>All Chats</Text>
               </View>
               {this.state.PressLong !== "" &&
               this.props.user.user.status == "admin" ? (

@@ -151,6 +151,29 @@ const NavigationOptions = props => (
             <Text style={{ fontSize: 20 }}>Chatroom</Text>
           </Body>
         </ListItem>
+
+        <ListItem
+          onPress={() => props.navigation.navigate("Home")}
+          icon
+          style={{ borderBottomWidth: 0, paddingBottom: 20, marginTop: 20 }}
+        >
+          <Left>
+            <Button
+              style={{
+                backgroundColor: "#F3BAA3",
+                borderRadius: 100,
+                width: 50,
+                height: 50
+              }}
+            >
+              <Icon active name="ios-chatboxes" />
+            </Button>
+          </Left>
+          <Body style={{ borderBottomWidth: 0, paddingLeft: 10 }}>
+            <Text style={{ fontSize: 20 }}>All Chats</Text>
+          </Body>
+        </ListItem>
+
         <ListItem
           onPress={() => props.navigation.navigate("AllUser")}
           icon

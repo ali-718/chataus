@@ -294,7 +294,7 @@ class Edit extends Component {
               .then(item => {
                 if (item.val()) {
                   this.props.LoginAction(item.val());
-                  this.props.navigation.replace("Home");
+                  this.props.navigation.replace("Groups");
                   console.log("user details edited");
                   this.setState({
                     uploading: false,
@@ -334,7 +334,7 @@ class Edit extends Component {
                     uploading: false,
                     isLoading: false
                   });
-                  this.props.navigation.replace("Home");
+                  this.props.navigation.replace("Groups");
                 }
               })
               .catch(e => {

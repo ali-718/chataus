@@ -32,7 +32,7 @@ class Splashscreen extends Component {
                 item.val().address
               ) {
                 this.props.LoginAction(item.val());
-                this.props.navigation.navigate("Home");
+                this.props.navigation.navigate("Groups");
                 clearTimeout(this.timer);
               } else {
                 this.props.LoginAction(item.val());
@@ -80,7 +80,7 @@ class Splashscreen extends Component {
               item.val().address
             ) {
               this.props.LoginAction(item.val());
-              this.props.navigation.navigate("Home");
+              this.props.navigation.navigate("Groups");
               clearTimeout(this.timer);
             } else {
               this.props.LoginAction(item.val());

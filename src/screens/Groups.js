@@ -134,7 +134,7 @@ class Groups extends Component {
   }
 
   backPress = () => {
-    this.props.navigation.goBack();
+    BackHandler.exitApp();
     return true;
   };
 
@@ -234,7 +234,7 @@ class Groups extends Component {
                       : "60%"
                 }}
               >
-                <Text style={{ color: "black", fontSize: 22 }}>Groups</Text>
+                <Text style={{ color: "black", fontSize: 22 }}>Chatroom</Text>
               </View>
               {this.state.PressLong !== "" ? (
                 <TouchableOpacity
