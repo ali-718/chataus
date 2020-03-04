@@ -356,6 +356,7 @@ export default class GroupMessages extends React.Component {
             style={{ width: "100%", flex: 1 }}
           >
             <Modal
+              onBackButtonPress={() => this.setState({ isModal: false })}
               isVisible={this.state.isModal}
               style={{ width: "100%", flex: 1, margin: 0 }}
             >
