@@ -1,5 +1,5 @@
 import React from "react";
-import { GiftedChat } from "react-native-gifted-chat";
+import { GiftedChat, Actions } from "react-native-gifted-chat";
 import {
   View,
   KeyboardAvoidingView,
@@ -8,6 +8,10 @@ import {
   Text,
   SafeAreaView,
   BackHandler,
+  ActivityIndicator,
+  StatusBar,
+  Image,
+  TextInput,
   ImageBackground
 } from "react-native";
 import { Icon, Spinner, Thumbnail } from "native-base";
@@ -15,15 +19,36 @@ import styles from "../../constants/styles";
 import * as f from "firebase";
 import { Avatar } from "react-native-elements";
 import Messaging from "../assets/Message.png";
+import * as Permissions from "expo-permissions";
+import * as ImagePicker from "expo-image-picker";
+import Modal from "react-native-modal";
 
 const auth = f.auth();
+const uuidv1 = require("uuid/v1");
 
 export default class GroupMessages extends React.Component {
   state = {
     messages: [],
     user: {},
     isLoading: true,
-    currentUser: {}
+    currentUser: {},
+    Camera: null,
+    CameraRoll: null,
+    ImageId: null,
+    ImageSelected: false,
+    ImageUri: "",
+    Caption: "",
+    uploading: false,
+    progress: 0,
+    title: "",
+    author: "",
+    Topic: "",
+    Time: "",
+    Place: "",
+    Details: "",
+    isModal: false,
+    imageTextInput: "",
+    mediaType: ""
   };
 
   sendPushNotification = (title, message, token) => {
@@ -44,6 +69,169 @@ export default class GroupMessages extends React.Component {
           name: "ali haider"
         }
       })
+    });
+  };
+
+  cancelButton = () => {
+    if (!this.state.uploading) {
+      this.setState({
+        ImageId: null,
+        ImageSelected: false,
+        ImageUri: "",
+        Caption: "",
+        uploading: false,
+        progress: 0
+      });
+    } else {
+      null;
+    }
+  };
+
+  checkPermissions = () => {
+    const { status } = Permissions.askAsync(Permissions.CAMERA);
+    this.setState({
+      Camera: status
+    });
+    const { statusRoll } = Permissions.askAsync(Permissions.CAMERA_ROLL);
+    this.setState({
+      CameraRoll: statusRoll
+    });
+  };
+
+  fetchImage = async () => {
+    this.checkPermissions();
+
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      quality: 0.2,
+      aspect: [4, 3]
+    });
+
+    console.log(result);
+
+    if (!result.cancelled) {
+      this.setState({
+        ImageSelected: true,
+        ImageUri: result.uri,
+        ImageId: 1,
+        isModal: true,
+        mediaType: result.type
+      });
+    } else {
+      console.log("cancelled");
+      this.setState({
+        ImageSelected: false
+      });
+    }
+  };
+
+  uploadImage = async uri => {
+    const userId = 2;
+    const imageId = this.state.ImageId;
+    const type = uri.split(".").pop();
+
+    this.setState({
+      uploading: true
+    });
+
+    const response = await fetch(uri);
+    const Blob = await response.blob();
+
+    let FilePath = imageId + "." + type;
+
+    let uploadRef = f
+      .storage()
+      .ref(`/groups/${uuidv1()}/images`)
+      .child(FilePath)
+      .put(Blob);
+
+    uploadRef.on(
+      "state_changed",
+      snapshot => {
+        let progress = (
+          (snapshot.bytesTransferred / snapshot.totalBytes) *
+          100
+        ).toFixed(0);
+
+        this.setState({ progress });
+      },
+      () => console.log(e),
+      final => {
+        uploadRef.snapshot.ref.getDownloadURL().then(download => {
+          this.uploadProcess(download, this.state.imageTextInput);
+        });
+      }
+    );
+  };
+
+  renderActions = props => {
+    const options = {
+      "Upload Media": props => {
+        this.fetchImage();
+      },
+      Cancel: () => {}
+    };
+    return <Actions {...props} options={options} />;
+  };
+
+  uploadProcess = (url, userMessage) => {
+    const message = {
+      id: uuidv1(),
+      text: userMessage
+    };
+
+    let imageData =
+      this.state.mediaType == "image"
+        ? {
+            message,
+            senderId: auth.currentUser.uid,
+            user: this.state.currentUser,
+            timeStamp: new Date().getTime(),
+            status: false,
+            image: url,
+            timeStamp: new Date().getTime(),
+            status: false,
+            group: true
+          }
+        : {
+            message,
+            senderId: auth.currentUser.uid,
+            user: this.state.currentUser,
+            timeStamp: new Date().getTime(),
+            status: false,
+            video: url,
+            timeStamp: new Date().getTime(),
+            status: false,
+            group: true
+          };
+
+    f.database()
+      .ref("groups")
+      .child(this.props.navigation.getParam("user").id)
+      .child("messages")
+      .push(imageData)
+      .then(() => {
+        f.database()
+          .ref("Notifications")
+          .push({
+            group: true,
+            user: {
+              id: this.props.navigation.getParam("user").id,
+              name: this.props.navigation.getParam("user").name,
+              avatar: this.props.navigation.getParam("user").avatar
+            },
+            NewTime: `${new Date().getUTCHours()}:${new Date().getUTCMinutes()}`
+          });
+      });
+
+    this.setState({
+      progress: 100,
+      uploading: false,
+      ImageSelected: false,
+      Caption: "",
+      ImageId: null,
+      isModal: false
     });
   };
 
@@ -90,7 +278,9 @@ export default class GroupMessages extends React.Component {
             _id: childSnapshot.key,
             text: childSnapshot.val().message.text,
             createdAt: childSnapshot.val().timeStamp,
-            user: childSnapshot.val().user
+            user: childSnapshot.val().user,
+            image: childSnapshot.val().image,
+            video: childSnapshot.val().video
           })
         });
 
@@ -103,35 +293,14 @@ export default class GroupMessages extends React.Component {
     this.setState({
       isLoading: false
     });
-    // .then(() => {
-    //   f.database()
-    //     .ref("chats")
-    //     .off();
-    // })
-    // .then(() => {
-    //   f.database()
-    //     .ref("chats")
-    //     .on("child_added", childSnapshot => {
-    //       console.log(childSnapshot.val());
-    //       if (
-    //         (childSnapshot.val().senderId === auth.currentUser.uid &&
-    //           childSnapshot.val().recieverId ===
-    //             this.props.navigation.getParam("user").id) ||
-    //         (childSnapshot.val().senderId ===
-    //           this.props.navigation.getParam("user").id &&
-    //           childSnapshot.val().recieverId === auth.currentUser.uid)
-    //       ) {
-    //         this.setState({
-    //           messages: GiftedChat.append(this.state.messages, {
-    //             _id: childSnapshot.key,
-    //             text: childSnapshot.val().message.text,
-    //             createdAt: childSnapshot.val().timeStamp,
-    //             user: childSnapshot.val().user
-    //           })
-    //         });
-    //       }
-    //     });
-    // });
+  };
+
+  publishPost = () => {
+    if (!this.state.uploading) {
+      this.uploadImage(this.state.ImageUri);
+    } else {
+      console.log("ignore this message");
+    }
   };
 
   onSend(messages) {
@@ -186,6 +355,100 @@ export default class GroupMessages extends React.Component {
             source={require("../assets/Message.png")}
             style={{ width: "100%", flex: 1 }}
           >
+            <Modal
+              isVisible={this.state.isModal}
+              style={{ width: "100%", flex: 1, margin: 0 }}
+            >
+              <SafeAreaView
+                style={{
+                  width: "100%",
+                  flex: 1,
+                  backgroundColor: "black",
+                  margin: 0
+                }}
+              >
+                <View
+                  style={{
+                    width: "100%",
+                    alignItems: "flex-end",
+                    paddingHorizontal: 20,
+                    marginTop: 10
+                  }}
+                >
+                  <Icon
+                    onPress={() => this.setState({ isModal: false })}
+                    name="cross"
+                    type="Entypo"
+                    style={{ color: "white" }}
+                  />
+                </View>
+                <View
+                  style={{
+                    width: "100%",
+                    flex: 1,
+                    alignItems: "center",
+                    justifyContent: "center"
+                  }}
+                >
+                  <Image
+                    source={{ uri: this.state.ImageUri }}
+                    style={{ width: "100%", height: 300 }}
+                  />
+                </View>
+
+                <View
+                  style={{
+                    width: "100%",
+                    flexDirection: "row",
+                    marginBottom: 10
+                  }}
+                >
+                  <View style={{ width: "80%" }}>
+                    <TextInput
+                      style={{
+                        borderColor: "gray",
+                        borderBottomWidth: 1,
+                        borderStyle: "solid",
+                        width: "100%",
+                        padding: 20,
+                        color: "white"
+                      }}
+                      placeholder="Write Message...!"
+                      placeholderTextColor="white"
+                      multiline
+                      value={this.state.imageTextInput}
+                      onChangeText={val =>
+                        this.setState({ imageTextInput: val })
+                      }
+                    />
+                  </View>
+                  {this.state.uploading ? (
+                    <View
+                      style={{
+                        width: "20%",
+                        alignItems: "center",
+                        justifyContent: "center"
+                      }}
+                    >
+                      <ActivityIndicator />
+                    </View>
+                  ) : (
+                    <TouchableOpacity
+                      style={{
+                        width: "20%",
+                        alignItems: "center",
+                        justifyContent: "center"
+                      }}
+                      onPress={() => this.publishPost()}
+                    >
+                      <Text style={{ fontWeight: "bold", color: "blue" }}>
+                        Send
+                      </Text>
+                    </TouchableOpacity>
+                  )}
+                </View>
+              </SafeAreaView>
+            </Modal>
             <KeyboardAvoidingView
               behavior="padding"
               enabled={true}
@@ -256,11 +519,6 @@ export default class GroupMessages extends React.Component {
                         alignItems: "center",
                         flexDirection: "row"
                       }}
-                      onPress={() =>
-                        this.props.navigation.navigate("Profile", {
-                          user: this.props.navigation.getParam("user")
-                        })
-                      }
                       disabled={true}
                     >
                       <Avatar
@@ -283,6 +541,8 @@ export default class GroupMessages extends React.Component {
                 onSend={messages => this.onSend(messages)}
                 user={this.state.currentUser}
                 renderUsernameOnMessage={true}
+                alwaysShowSend={true}
+                renderActions={this.renderActions}
               />
             </KeyboardAvoidingView>
           </ImageBackground>
