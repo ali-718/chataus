@@ -183,27 +183,65 @@ export default class Obaid extends Component {
               <View
                 style={{ width: "100%", marginTop: 50, alignItems: "center" }}
               >
-                <Item style={{ width: "90%" }} floatingLabel>
+                <Item
+                  style={{ width: "90%", alignItems: "flex-start" }}
+                  stackedLabel
+                >
                   <Label>Address</Label>
                   <Input multiline disabled value={this.state.user.address} />
                 </Item>
-                <Item style={{ width: "90%", marginTop: 20 }} floatingLabel>
+                <Item
+                  style={{
+                    width: "90%",
+                    alignItems: "flex-start",
+                    marginTop: 20
+                  }}
+                  stackedLabel
+                >
                   <Label>Email</Label>
                   <Input multiline disabled value={this.state.user.email} />
                 </Item>
-                <Item style={{ width: "90%", marginTop: 20 }} floatingLabel>
+                <Item
+                  style={{
+                    width: "90%",
+                    alignItems: "flex-start",
+                    marginTop: 20
+                  }}
+                  stackedLabel
+                >
                   <Label>Phone</Label>
                   <Input multiline disabled value={this.state.user.phone} />
                 </Item>
-                <Item style={{ width: "90%", marginTop: 20 }} floatingLabel>
+                <Item
+                  style={{
+                    width: "90%",
+                    alignItems: "flex-start",
+                    marginTop: 20
+                  }}
+                  stackedLabel
+                >
                   <Label>Job Title</Label>
                   <Input multiline disabled value={this.state.user.jobtitle} />
                 </Item>
-                <Item style={{ width: "90%", marginTop: 20 }} floatingLabel>
+                <Item
+                  style={{
+                    width: "90%",
+                    alignItems: "flex-start",
+                    marginTop: 20
+                  }}
+                  stackedLabel
+                >
                   <Label>Location</Label>
                   <Input multiline disabled value={this.state.user.location} />
                 </Item>
-                <Item style={{ width: "90%", marginTop: 20 }} floatingLabel>
+                <Item
+                  style={{
+                    width: "90%",
+                    alignItems: "flex-start",
+                    marginTop: 20
+                  }}
+                  stackedLabel
+                >
                   <Label>Organization</Label>
                   <Input
                     multiline
@@ -211,11 +249,25 @@ export default class Obaid extends Component {
                     value={this.state.user.organization}
                   />
                 </Item>
-                <Item style={{ width: "90%", marginTop: 20 }} floatingLabel>
+                <Item
+                  style={{
+                    width: "90%",
+                    alignItems: "flex-start",
+                    marginTop: 20
+                  }}
+                  stackedLabel
+                >
                   <Label>Industry</Label>
                   <Input multiline disabled value={this.state.user.industry} />
                 </Item>
-                <Item style={{ width: "90%", marginTop: 20 }} floatingLabel>
+                <Item
+                  style={{
+                    width: "90%",
+                    alignItems: "flex-start",
+                    marginTop: 20
+                  }}
+                  stackedLabel
+                >
                   <Label>Base Education</Label>
                   <Input multiline disabled value={this.state.user.education} />
                 </Item>

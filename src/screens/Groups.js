@@ -55,7 +55,7 @@ class Groups extends Component {
       .on("value", snapshot => {
         snapshot.forEach(item => {
           if (item.senderId == id) {
-            console.log(item.status);
+            // console.log(item.status);
             return true;
           }
         });
@@ -138,7 +138,7 @@ class Groups extends Component {
     return true;
   };
 
-  componentDidMount() {
+  async componentDidMount() {
     BackHandler.addEventListener("hardwareBackPress", this.backPress);
     this.registerNotification();
     f.database()
@@ -162,7 +162,7 @@ class Groups extends Component {
         }
         snapshot.forEach(res => {
           this.state.groups.push({ ...res.val(), id: res.key });
-          console.log(res.val());
+          // console.log(res.val());
         });
       })
       .then(() => {
@@ -201,7 +201,7 @@ class Groups extends Component {
           </View>
         ) : (
           <View style={{ width: "100%", flex: 1 }}>
-            {console.log(this.state.groups)}
+            {/* {console.log(this.state.groups)} */}
             <View
               style={{
                 width: "100%",

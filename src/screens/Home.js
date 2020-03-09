@@ -42,7 +42,6 @@ class Home extends Component {
 
   DeleteUser = () => {
     this.state.chats.map(item => {
-      console.log(item._id);
       f.database()
         .ref("users")
         .child(f.auth().currentUser.uid)
@@ -61,7 +60,6 @@ class Home extends Component {
       .on("value", snapshot => {
         snapshot.forEach(item => {
           if (item.senderId == id) {
-            console.log(item.status);
             return true;
           }
         });
@@ -93,7 +91,6 @@ class Home extends Component {
             (childSnapshot.val().senderId === userId &&
               childSnapshot.val().recieverId === f.auth().currentUser.uid)
           ) {
-            console.log("found chats");
             this.state.chats.push({
               _id: childSnapshot.key,
               text: childSnapshot.val().message.text,

@@ -351,110 +351,110 @@ export default class GroupMessages extends React.Component {
             <Spinner color="blue" size="large" />
           </View>
         ) : (
-          <ImageBackground
-            source={require("../assets/Message.png")}
+          <KeyboardAvoidingView
+            behavior="padding"
+            enabled={true}
             style={{ width: "100%", flex: 1 }}
           >
-            <Modal
-              onBackButtonPress={() => this.setState({ isModal: false })}
-              isVisible={this.state.isModal}
-              style={{ width: "100%", flex: 1, margin: 0 }}
+            <ImageBackground
+              source={require("../assets/Message.png")}
+              style={{ width: "100%", flex: 1 }}
             >
-              <SafeAreaView
-                style={{
-                  width: "100%",
-                  flex: 1,
-                  backgroundColor: "black",
-                  margin: 0
-                }}
+              <Modal
+                onBackButtonPress={() => this.setState({ isModal: false })}
+                isVisible={this.state.isModal}
+                style={{ width: "100%", flex: 1, margin: 0 }}
               >
-                <View
-                  style={{
-                    width: "100%",
-                    alignItems: "flex-end",
-                    paddingHorizontal: 20,
-                    marginTop: 10
-                  }}
-                >
-                  <Icon
-                    onPress={() => this.setState({ isModal: false })}
-                    name="cross"
-                    type="Entypo"
-                    style={{ color: "white" }}
-                  />
-                </View>
-                <View
+                <SafeAreaView
                   style={{
                     width: "100%",
                     flex: 1,
-                    alignItems: "center",
-                    justifyContent: "center"
+                    backgroundColor: "black",
+                    margin: 0
                   }}
                 >
-                  <Image
-                    source={{ uri: this.state.ImageUri }}
-                    style={{ width: "100%", height: 300 }}
-                  />
-                </View>
-
-                <View
-                  style={{
-                    width: "100%",
-                    flexDirection: "row",
-                    marginBottom: 10
-                  }}
-                >
-                  <View style={{ width: "80%" }}>
-                    <TextInput
-                      style={{
-                        borderColor: "gray",
-                        borderBottomWidth: 1,
-                        borderStyle: "solid",
-                        width: "100%",
-                        padding: 20,
-                        color: "white"
-                      }}
-                      placeholder="Write Message...!"
-                      placeholderTextColor="white"
-                      multiline
-                      value={this.state.imageTextInput}
-                      onChangeText={val =>
-                        this.setState({ imageTextInput: val })
-                      }
+                  <View
+                    style={{
+                      width: "100%",
+                      alignItems: "flex-end",
+                      paddingHorizontal: 20,
+                      marginTop: 10
+                    }}
+                  >
+                    <Icon
+                      onPress={() => this.setState({ isModal: false })}
+                      name="cross"
+                      type="Entypo"
+                      style={{ color: "white" }}
                     />
                   </View>
-                  {this.state.uploading ? (
-                    <View
-                      style={{
-                        width: "20%",
-                        alignItems: "center",
-                        justifyContent: "center"
-                      }}
-                    >
-                      <ActivityIndicator />
+                  <View
+                    style={{
+                      width: "100%",
+                      flex: 1,
+                      alignItems: "center",
+                      justifyContent: "center"
+                    }}
+                  >
+                    <Image
+                      source={{ uri: this.state.ImageUri }}
+                      style={{ width: "100%", height: 300 }}
+                    />
+                  </View>
+
+                  <View
+                    style={{
+                      width: "100%",
+                      flexDirection: "row",
+                      marginBottom: 10
+                    }}
+                  >
+                    <View style={{ width: "80%" }}>
+                      <TextInput
+                        style={{
+                          borderColor: "gray",
+                          borderBottomWidth: 1,
+                          borderStyle: "solid",
+                          width: "100%",
+                          padding: 20,
+                          color: "white"
+                        }}
+                        placeholder="Write Message...!"
+                        placeholderTextColor="white"
+                        multiline
+                        value={this.state.imageTextInput}
+                        onChangeText={val =>
+                          this.setState({ imageTextInput: val })
+                        }
+                      />
                     </View>
-                  ) : (
-                    <TouchableOpacity
-                      style={{
-                        width: "20%",
-                        alignItems: "center",
-                        justifyContent: "center"
-                      }}
-                      onPress={() => this.publishPost()}
-                    >
-                      <Text style={{ fontWeight: "bold", color: "blue" }}>
-                        Send
-                      </Text>
-                    </TouchableOpacity>
-                  )}
-                </View>
-              </SafeAreaView>
-            </Modal>
-            <KeyboardAvoidingView
-              behavior="padding"
-              enabled={true}
-              style={{ width: "100%", flex: 1 }}
-            >
+                    {this.state.uploading ? (
+                      <View
+                        style={{
+                          width: "20%",
+                          alignItems: "center",
+                          justifyContent: "center"
+                        }}
+                      >
+                        <ActivityIndicator />
+                      </View>
+                    ) : (
+                      <TouchableOpacity
+                        style={{
+                          width: "20%",
+                          alignItems: "center",
+                          justifyContent: "center"
+                        }}
+                        onPress={() => this.publishPost()}
+                      >
+                        <Text style={{ fontWeight: "bold", color: "blue" }}>
+                          Send
+                        </Text>
+                      </TouchableOpacity>
+                    )}
+                  </View>
+                </SafeAreaView>
+              </Modal>
               <View
                 style={{
                   width: "100%",
@@ -545,8 +545,8 @@ export default class GroupMessages extends React.Component {
                 alwaysShowSend={true}
                 renderActions={this.renderActions}
               />
-            </KeyboardAvoidingView>
-          </ImageBackground>
+            </ImageBackground>
+          </KeyboardAvoidingView>
         )}
       </SafeAreaView>
     );

@@ -28,6 +28,7 @@ import Modal from "react-native-modal";
 import Video from "react-native-video";
 const uuidv1 = require("uuid/v1");
 const auth = f.auth();
+var moment = require("moment");
 
 export default class Messages extends React.Component {
   state = {
@@ -89,8 +90,6 @@ export default class Messages extends React.Component {
       aspect: [4, 3]
     });
 
-    console.log(result);
-
     if (!result.cancelled) {
       this.setState({
         ImageSelected: true,
@@ -100,7 +99,6 @@ export default class Messages extends React.Component {
         mediaType: result.type
       });
     } else {
-      console.log("cancelled");
       this.setState({
         ImageSelected: false
       });
@@ -180,13 +178,6 @@ export default class Messages extends React.Component {
         f.database()
           .ref("users")
           .child(this.props.navigation.getParam("user").id)
-          .update({
-            shortMessage: message.text
-          });
-
-        f.database()
-          .ref("users")
-          .child(this.props.navigation.getParam("user").id)
           .child("chats")
           .push({
             message,
@@ -248,6 +239,17 @@ export default class Messages extends React.Component {
     });
   };
 
+  getMomentFromTimeString = str => {
+    var t = moment(str, "HH:mm A");
+    // Now t is a moment.js object of today's date at the time given in str
+
+    if (t.get("hour") < 22)
+      // If it's before 9 pm
+      t.add("d", 1); // Add 1 day, so that t is tomorrow's date at the same time
+
+    return t;
+  };
+
   publishPost = () => {
     if (!this.state.uploading) {
       this.uploadImage(this.state.ImageUri);
@@ -270,9 +272,27 @@ export default class Messages extends React.Component {
     return (
       <Bubble
         {...props}
-        wrapperStyle={{
-          left: {
-            backgroundColor: "#f0f0f0"
+        renderTicks={props => {
+          let tick = null;
+
+          if (props.user._id == f.auth().currentUser.uid) {
+            if (props.status) {
+              return (
+                <Icon
+                  name="check-all"
+                  type="MaterialCommunityIcons"
+                  style={{ color: "white", fontSize: 15, marginRight: 10 }}
+                />
+              );
+            } else {
+              return (
+                <Icon
+                  name="check"
+                  type="MaterialCommunityIcons"
+                  style={{ color: "white", fontSize: 15, marginRight: 10 }}
+                />
+              );
+            }
           }
         }}
       />
@@ -300,11 +320,6 @@ export default class Messages extends React.Component {
     });
   };
 
-  componentWillUnmount() {
-    console.log("Home unmount");
-    BackHandler.removeEventListener("hardwareBackPress", this.backPress);
-  }
-
   backPress = () => {
     this.props.navigation.goBack();
     return true;
@@ -328,52 +343,46 @@ export default class Messages extends React.Component {
       })
       .then(() => {
         this.fetchMessage();
+        this.updateTicksOnMessages();
       });
-
-    // database.ref("chats").once("value", snapshot => {
-    //   snapshot.forEach(childSnapshot => {
-    //     if (
-    //       (childSnapshot.val().senderId === auth.currentUser.uid &&
-    //         childSnapshot.val().recieverId ===
-    //           this.props.navigation.getParam("user").userId) ||
-    //       (childSnapshot.val().senderId ===
-    //         this.props.navigation.getParam("user").userId &&
-    //         childSnapshot.val().recieverId === auth.currentUser.uid)
-    //     ) {
-    //       this.setState({
-    //         messages: GiftedChat.append(this.state.messages, {
-    //           _id: childSnapshot.key,
-    //           text: childSnapshot.val().message.text,
-    //           createdAt: new Date(),
-    //           user: childSnapshot.val().user
-    //         })
-    //       });
-    //     }
-    //   });
-    // });
-
-    // this.setState({
-    //   messages: [
-    //     {
-    //       _id: 1,
-    //       text: "Hello developer",
-    //       createdAt: new Date(),
-    //       user: {
-    //         _id: 2,
-    //         name: "React Native",
-    //         avatar: "https://placeimg.com/140/140/any"
-    //       }
-    //     }
-    //   ]
-    // });
   }
 
-  fetchMessage = () => {
+  updateTicksOnMessages = () => {
+    f.database()
+      .ref("users")
+      .child(f.auth().currentUser.uid)
+      .child("chats")
+      .on("child_added", childSnapshot => {
+        if (childSnapshot.val().recieverId == f.auth().currentUser.uid) {
+          f.database()
+            .ref("users")
+            .child(f.auth().currentUser.uid)
+            .child("chats")
+            .child(childSnapshot.key)
+            .update({
+              status: true
+            });
+        }
+      });
+
     f.database()
       .ref("chats")
       .on("child_added", childSnapshot => {
-        // snapshot.forEach(childSnapshot => {
-        // console.log(childSnapshot.val());
+        if (childSnapshot.val().recieverId == f.auth().currentUser.uid) {
+          f.database()
+            .ref("chats")
+            .child(childSnapshot.key)
+            .update({
+              status: true
+            });
+        }
+      });
+  };
+
+  getMessagesOnce = () => {
+    f.database()
+      .ref("chats")
+      .on("value", childSnapshot => {
         if (
           (childSnapshot.val().senderId === auth.currentUser.uid &&
             childSnapshot.val().recieverId ===
@@ -389,52 +398,55 @@ export default class Messages extends React.Component {
               createdAt: childSnapshot.val().timeStamp,
               user: childSnapshot.val().user,
               image: childSnapshot.val().image,
-              video: childSnapshot.val().video
+              video: childSnapshot.val().video,
+              status: childSnapshot.val().status
             })
           });
         }
-        // });
-        this.setState({
-          isLoading: false
+      });
+  };
+
+  fetchMessage = () => {
+    f.database()
+      .ref("chats")
+      .on("value", snapshot => {
+        // console.log(snapshot.val());
+        this.setState({ messages: [] });
+
+        snapshot.forEach(childSnapshot => {
+          if (
+            (childSnapshot.val().senderId === auth.currentUser.uid &&
+              childSnapshot.val().recieverId ===
+                this.props.navigation.getParam("user").id) ||
+            (childSnapshot.val().senderId ===
+              this.props.navigation.getParam("user").id &&
+              childSnapshot.val().recieverId === auth.currentUser.uid)
+          ) {
+            this.setState({
+              messages: GiftedChat.append(this.state.messages, {
+                _id: childSnapshot.key,
+                text: childSnapshot.val().message.text,
+                createdAt: childSnapshot.val().timeStamp,
+                user: childSnapshot.val().user,
+                image: childSnapshot.val().image,
+                video: childSnapshot.val().video,
+                status: childSnapshot.val().status
+              })
+            });
+          }
+          // });
+          this.setState({
+            isLoading: false
+          });
         });
       });
 
     this.setState({
       isLoading: false
     });
-    // .then(() => {
-    //   f.database()
-    //     .ref("chats")
-    //     .off();
-    // })
-    // .then(() => {
-    //   f.database()
-    //     .ref("chats")
-    //     .on("child_added", childSnapshot => {
-    //       console.log(childSnapshot.val());
-    //       if (
-    //         (childSnapshot.val().senderId === auth.currentUser.uid &&
-    //           childSnapshot.val().recieverId ===
-    //             this.props.navigation.getParam("user").id) ||
-    //         (childSnapshot.val().senderId ===
-    //           this.props.navigation.getParam("user").id &&
-    //           childSnapshot.val().recieverId === auth.currentUser.uid)
-    //       ) {
-    //         this.setState({
-    //           messages: GiftedChat.append(this.state.messages, {
-    //             _id: childSnapshot.key,
-    //             text: childSnapshot.val().message.text,
-    //             createdAt: childSnapshot.val().timeStamp,
-    //             user: childSnapshot.val().user
-    //           })
-    //         });
-    //       }
-    //     });
-    // });
   };
 
   onSend(messages) {
-    // console.log(messages);
     const OriginalMessage = messages[0];
     const message = {
       id: OriginalMessage._id,
@@ -451,13 +463,6 @@ export default class Messages extends React.Component {
         status: false
       })
       .then(() => {
-        f.database()
-          .ref("users")
-          .child(this.props.navigation.getParam("user").id)
-          .update({
-            shortMessage: message.text
-          });
-
         f.database()
           .ref("users")
           .child(this.props.navigation.getParam("user").id)
@@ -531,6 +536,7 @@ export default class Messages extends React.Component {
             enabled={true}
             style={{ width: "100%", flex: 1 }}
           >
+            {console.log(this.state)}
             <Modal
               isVisible={this.state.isModal}
               style={{ width: "100%", flex: 1, margin: 0 }}
@@ -625,7 +631,6 @@ export default class Messages extends React.Component {
                 </View>
               </SafeAreaView>
             </Modal>
-            {console.log(this.state)}
             <View
               style={{
                 width: "100%",
@@ -718,6 +723,7 @@ export default class Messages extends React.Component {
               user={this.state.user}
               alwaysShowSend={true}
               renderActions={this.renderActions}
+              renderBubble={props => this.renderBubble(props)}
             ></GiftedChat>
           </KeyboardAvoidingView>
         )}

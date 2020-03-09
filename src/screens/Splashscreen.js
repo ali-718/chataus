@@ -5,6 +5,7 @@ import * as f from "firebase";
 import { connect } from "react-redux";
 import { LoginAction } from "../actions/userAction";
 import { Icon, Spinner } from "native-base";
+import * as Permissions from "expo-permissions";
 
 class Splashscreen extends Component {
   state = {
@@ -17,14 +18,14 @@ class Splashscreen extends Component {
     async () => {
       f.auth().onAuthStateChanged(user => {
         if (user) {
-          console.log(user.uid);
+          // console.log(user.uid);
           f.database()
             .ref("users")
             .child(user.uid)
             .once("value")
             .then(item => {
-              console.log(item.val());
-              console.log("item val");
+              // console.log(item.val());
+              // console.log("item val");
               if (
                 item.val().description &&
                 item.val().phone &&
@@ -33,10 +34,9 @@ class Splashscreen extends Component {
               ) {
                 this.props.LoginAction(item.val());
                 this.props.navigation.navigate("Groups");
-                clearTimeout(this.timer);
               } else {
                 this.props.LoginAction(item.val());
-                this.props.navigation.navigate("Edit", { fromLogin: true });
+                this.props.navigation.navigate("Groups", { fromLogin: true });
               }
             });
         } else {
@@ -56,7 +56,7 @@ class Splashscreen extends Component {
     return true;
   };
 
-  componentDidMount() {
+  async componentDidMount() {
     BackHandler.addEventListener("hardwareBackPress", this.backPress);
     // this.timer = setTimeout(() => {
     //   this.setState({
@@ -65,13 +65,13 @@ class Splashscreen extends Component {
     // }, 6000);
     f.auth().onAuthStateChanged(user => {
       if (user) {
-        console.log(user.uid);
+        // console.log(user.uid);
         f.database()
           .ref("users")
           .child(user.uid)
           .once("value")
           .then(item => {
-            console.log(item.val());
+            // console.log(item.val());
             console.log("item val");
             if (
               item.val().description &&
@@ -81,10 +81,9 @@ class Splashscreen extends Component {
             ) {
               this.props.LoginAction(item.val());
               this.props.navigation.navigate("Groups");
-              clearTimeout(this.timer);
             } else {
               this.props.LoginAction(item.val());
-              this.props.navigation.navigate("Edit", { fromLogin: true });
+              this.props.navigation.navigate("Groups", { fromLogin: true });
             }
           });
       } else {
