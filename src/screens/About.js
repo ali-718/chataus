@@ -33,8 +33,11 @@ import { Linking } from "react-native";
 
 export default class About extends Component {
   componentDidMount() {
-    BackHandler.addEventListener("hardwareBackPress", () => {
-      this.props.navigation.goBack();
+    this.backSubscribe = this.props.navigation.addListener("didFocus", () => {
+      BackHandler.addEventListener("hardwareBackPress", () => {
+        this.props.navigation.goBack();
+        return true;
+      });
     });
   }
   render() {

@@ -40,13 +40,13 @@ class Register extends Component {
     Linkedin: ""
   };
 
-  componentWillUnmount() {
-    console.log("Home unmount");
-    BackHandler.removeEventListener("hardwareBackPress", this.backPress);
-  }
-
   componentDidMount() {
-    BackHandler.addEventListener("hardwareBackPress", this.backPress);
+    this.backSubscribe = this.props.navigation.addListener("didFocus", () => {
+      BackHandler.addEventListener("hardwareBackPress", () => {
+        this.props.navigation.goBack();
+        return true;
+      });
+    });
   }
 
   backPress = () => {

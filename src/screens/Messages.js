@@ -293,6 +293,8 @@ export default class Messages extends React.Component {
                 />
               );
             }
+          } else {
+            return null;
           }
         }}
       />
@@ -326,7 +328,12 @@ export default class Messages extends React.Component {
   };
 
   componentDidMount() {
-    BackHandler.addEventListener("hardwareBackPress", this.backPress);
+    this.backSubscribe = this.props.navigation.addListener("didFocus", () => {
+      BackHandler.addEventListener("hardwareBackPress", () => {
+        this.props.navigation.goBack();
+        return true;
+      });
+    });
 
     f.database()
       .ref("users")

@@ -215,9 +215,11 @@ export default class Complain extends Component {
 
   componentDidMount() {
     // auth.signOut();
-    BackHandler.addEventListener("hardwareBackPress", () => {
-      this.props.navigation.goBack();
-      return true;
+    this.backSubscribe = this.props.navigation.addListener("didFocus", () => {
+      BackHandler.addEventListener("hardwareBackPress", () => {
+        this.props.navigation.goBack();
+        return true;
+      });
     });
     this.checkPermissions();
 

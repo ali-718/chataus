@@ -27,13 +27,13 @@ class Login extends Component {
     showAlert2: false
   };
 
-  componentWillUnmount() {
-    console.log("Home unmount");
-    BackHandler.removeEventListener("hardwareBackPress", this.backPress);
-  }
-
   componentDidMount() {
-    BackHandler.addEventListener("hardwareBackPress", this.backPress);
+    this.backSubscribe = this.props.navigation.addListener("didFocus", () => {
+      BackHandler.addEventListener("hardwareBackPress", () => {
+        BackHandler.exitApp();
+        return true;
+      });
+    });
   }
 
   backPress = () => {

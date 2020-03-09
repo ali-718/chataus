@@ -134,18 +134,19 @@ class Users extends Component {
     // }, 1000);
   };
 
-  componentWillUnmount() {
-    console.log("Home unmount");
-    BackHandler.removeEventListener("hardwareBackPress", this.backPress);
-  }
-
   backPress = () => {
     this.props.navigation.goBack();
     return true;
   };
 
   componentDidMount() {
-    BackHandler.addEventListener("hardwareBackPress", this.backPress);
+    this.backSubscribe = this.props.navigation.addListener("didFocus", () => {
+      BackHandler.addEventListener("hardwareBackPress", () => {
+        this.props.navigation.goBack();
+        return true;
+      });
+    });
+
     this.registerNotification();
     f.database()
       .ref("users")

@@ -83,11 +83,6 @@ class Edit extends Component {
     });
   };
 
-  componentWillUnmount() {
-    console.log("Home unmount");
-    BackHandler.removeEventListener("hardwareBackPress", this.backPress);
-  }
-
   backPress = () => {
     this.props.navigation.goBack();
     return true;
@@ -205,7 +200,12 @@ class Edit extends Component {
   };
 
   componentDidMount() {
-    BackHandler.addEventListener("hardwareBackPress", this.backPress);
+    this.backSubscribe = this.props.navigation.addListener("didFocus", () => {
+      BackHandler.addEventListener("hardwareBackPress", () => {
+        this.props.navigation.goBack();
+        return true;
+      });
+    });
     this.checkPermissions();
     this.notificationPermission();
     f.database()

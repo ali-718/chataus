@@ -43,7 +43,12 @@ export default class ComplainStatus extends Component {
   };
 
   componentDidMount() {
-    BackHandler.addEventListener("hardwareBackPress", this.backPress);
+    this.backSubscribe = this.props.navigation.addListener("didFocus", () => {
+      BackHandler.addEventListener("hardwareBackPress", () => {
+        this.props.navigation.goBack();
+        return true;
+      });
+    });
     f.database()
       .ref("Events")
       .once("value")
@@ -63,11 +68,6 @@ export default class ComplainStatus extends Component {
         alert("some error occoured");
         this.setState({ isLoading: false });
       });
-  }
-
-  componentWillUnmount() {
-    console.log("Home unmount");
-    BackHandler.removeEventListener("hardwareBackPress", this.backPress);
   }
 
   backPress = () => {

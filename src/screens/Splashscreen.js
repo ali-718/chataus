@@ -46,18 +46,18 @@ class Splashscreen extends Component {
     }
   );
 
-  componentWillUnmount() {
-    console.log("Home unmount");
-    BackHandler.removeEventListener("hardwareBackPress", this.backPress);
-  }
-
   backPress = () => {
     BackHandler.exitApp();
     return true;
   };
 
   async componentDidMount() {
-    BackHandler.addEventListener("hardwareBackPress", this.backPress);
+    this.backSubscribe = this.props.navigation.addListener("didFocus", () => {
+      BackHandler.addEventListener("hardwareBackPress", () => {
+        BackHandler.exitApp();
+        return true;
+      });
+    });
     // this.timer = setTimeout(() => {
     //   this.setState({
     //     connection: "You might check your internet connection"
