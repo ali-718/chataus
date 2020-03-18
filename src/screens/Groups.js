@@ -9,6 +9,7 @@ import {
   ImageBackground
 } from "react-native";
 import {
+  CheckBox,
   Container,
   Header,
   Content,
@@ -46,7 +47,11 @@ class Groups extends Component {
     selectedMembers: [],
     groupName: "",
     isModalLoading: false,
-    showAlert: false
+    showAlert: false,
+    AllUserChecked: false,
+    groupNameTextBoxFocused: false,
+    userGroups: [],
+    remainingGroups: []
   };
 
   showStatus = id => {
@@ -69,18 +74,45 @@ class Groups extends Component {
   };
 
   createGroup = () => {
-    if (this.state.groupName.trim() == "") {
-      alert("Please provide the name of the group");
+    if (
+      this.state.groupName.trim() == "" ||
+      this.state.selectedMembers.length == 0
+    ) {
+      alert(
+        "Please fill all fields and select atleast one member for your group"
+      );
     } else {
       this.setState({
         isModalLoading: true
       });
+
       f.database()
         .ref("groups")
         .push({
           name: this.state.groupName,
+          admin: f.auth().currentUser.uid,
+          everyone: this.state.AllUserChecked,
           avatar:
             "https://images.pexels.com/photos/1092644/pexels-photo-1092644.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+        })
+        .child("members")
+        .set(this.state.selectedMembers)
+        .then(() => {
+          if (!this.state.AllUserChecked) {
+            this.state.selectedMembers.map(item => {
+              f.database()
+                .ref("users")
+                .child(item.id)
+                .child("groups")
+                .push({
+                  name: this.state.groupName,
+                  admin: f.auth().currentUser.uid,
+                  everyone: this.state.AllUserChecked,
+                  avatar:
+                    "https://images.pexels.com/photos/1092644/pexels-photo-1092644.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+                });
+            });
+          }
         })
         .then(() => {
           this.props.navigation.replace("Groups");
@@ -136,6 +168,7 @@ class Groups extends Component {
   async componentDidMount() {
     this.backSubscribe = this.props.navigation.addListener("didFocus", () => {
       BackHandler.addEventListener("hardwareBackPress", () => {
+        this.setState({ groupNameTextBoxFocused: false });
         BackHandler.exitApp();
         return true;
       });
@@ -147,7 +180,9 @@ class Groups extends Component {
       .then(snapshot => {
         snapshot.forEach(res => {
           this.showStatus(res.key);
-          this.state.users.push({ ...res.val(), id: res.key });
+          this.setState({
+            users: [...this.state.users, { ...res.val(), id: res.key }]
+          });
         });
       });
 
@@ -156,14 +191,38 @@ class Groups extends Component {
       .once("value")
       .then(snapshot => {
         if (!snapshot.val()) {
-          this.setState({
-            isLoading: false
-          });
+          console.log("nothing here");
         }
         snapshot.forEach(res => {
           this.state.groups.push({ ...res.val(), id: res.key });
+          if (res.val().everyone) {
+            this.state.userGroups.push({ ...res.val(), id: res.key });
+          }
           // console.log(res.val());
         });
+      })
+      .then(() => {
+        f.database()
+          .ref("users")
+          .child(f.auth().currentUser.uid)
+          .child("groups")
+          .once("value")
+          .then(snapshot => {
+            if (!snapshot.val()) {
+              this.setState({
+                isLoading: false
+              });
+            }
+            snapshot.forEach(res => {
+              this.state.userGroups.push({ ...res.val(), id: res.key });
+              // console.log(res.val());
+            });
+          })
+          .then(() => {
+            this.setState({
+              isLoading: false
+            });
+          });
       })
       .then(() => {
         this.setState({
@@ -294,41 +353,81 @@ class Groups extends Component {
               >
                 <ScrollView style={{ width: "100%", flex: 1 }}>
                   <List style={{ marginTop: 10 }}>
-                    {this.state.groups.map(item => {
-                      return (
-                        <TouchableOpacity
-                          onPress={() => {
-                            if (this.state.PressLong == "") {
-                              this.props.navigation.navigate("GroupChat", {
-                                user: item
-                              });
-                            } else {
-                              this.props.navigation.replace("Groups");
-                            }
-                          }}
-                          key={item.id}
-                          style={{
-                            width: "100%",
-                            height: 70,
-                            flexDirection: "row",
-                            marginTop: 20
-                          }}
-                        >
-                          <View
-                            style={{
-                              width: "100%",
-                              justifyContent: "center",
-                              borderBottomColor: "gainsboro",
-                              borderBottomWidth: 0.5,
-                              borderStyle: "solid",
-                              paddingHorizontal: 20
-                            }}
-                          >
-                            <Text style={{ fontSize: 22 }}>{item.name}</Text>
-                          </View>
-                        </TouchableOpacity>
-                      );
-                    })}
+                    {this.props.user.user.status == "admin"
+                      ? this.state.groups.map(item => {
+                          return (
+                            <TouchableOpacity
+                              onPress={() => {
+                                if (this.state.PressLong == "") {
+                                  this.props.navigation.navigate("GroupChat", {
+                                    user: item
+                                  });
+                                } else {
+                                  this.props.navigation.replace("Groups");
+                                }
+                              }}
+                              key={item.id}
+                              style={{
+                                width: "100%",
+                                height: 70,
+                                flexDirection: "row",
+                                marginTop: 20
+                              }}
+                            >
+                              <View
+                                style={{
+                                  width: "100%",
+                                  justifyContent: "center",
+                                  borderBottomColor: "gainsboro",
+                                  borderBottomWidth: 0.5,
+                                  borderStyle: "solid",
+                                  paddingHorizontal: 20
+                                }}
+                              >
+                                <Text style={{ fontSize: 22 }}>
+                                  {item.name}
+                                </Text>
+                              </View>
+                            </TouchableOpacity>
+                          );
+                        })
+                      : this.state.userGroups.map(item => {
+                          return (
+                            <TouchableOpacity
+                              onPress={() => {
+                                if (this.state.PressLong == "") {
+                                  this.props.navigation.navigate("GroupChat", {
+                                    user: item
+                                  });
+                                } else {
+                                  this.props.navigation.replace("Groups");
+                                }
+                              }}
+                              key={item.id}
+                              style={{
+                                width: "100%",
+                                height: 70,
+                                flexDirection: "row",
+                                marginTop: 20
+                              }}
+                            >
+                              <View
+                                style={{
+                                  width: "100%",
+                                  justifyContent: "center",
+                                  borderBottomColor: "gainsboro",
+                                  borderBottomWidth: 0.5,
+                                  borderStyle: "solid",
+                                  paddingHorizontal: 20
+                                }}
+                              >
+                                <Text style={{ fontSize: 22 }}>
+                                  {item.name}
+                                </Text>
+                              </View>
+                            </TouchableOpacity>
+                          );
+                        })}
                   </List>
                 </ScrollView>
               </ImageBackground>
@@ -353,86 +452,247 @@ class Groups extends Component {
               <Spinner color="blue" size="large" />
             </View>
           ) : (
-            <View
-              style={{
-                width: "100%",
-                alignItems: "center",
-                backgroundColor: "white",
-                borderRadius: 20
-              }}
+            <ScrollView
+              showsVerticalScrollIndicator={false}
+              style={{ width: "100%", flex: 1 }}
+              scrollEnabled={this.state.groupNameTextBoxFocused}
             >
-              <View style={{ width: "80%", marginTop: 50 }}>
-                <Item floatingLabel>
-                  <Label style={{ color: "gray" }}>Group Name</Label>
-                  <Input
-                    onChangeText={val =>
-                      this.setState({
-                        groupName: val
-                      })
-                    }
-                    value={this.state.groupName}
-                    placeholder="Group Name...!"
-                  />
-                </Item>
-              </View>
-              <View style={{ width: "100%", flexDirection: "row" }}>
-                <View style={{ width: "50%", alignItems: "center" }}>
-                  <View
-                    style={{
-                      marginTop: 50,
-                      width: "80%",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      marginBottom: 20
-                    }}
-                  >
-                    <Button
-                      // disabled={this.state.uploading == true ? true : false}
-                      onPress={() =>
+              <View
+                style={{
+                  width: "100%",
+                  flex: 1,
+                  alignItems: "center",
+                  backgroundColor: "white",
+                  borderRadius: 20
+                }}
+              >
+                <View style={{ width: "80%", marginTop: 50 }}>
+                  <Item style={{ alignItems: "flex-start" }} stackedLabel>
+                    <Input
+                      onFocus={() => {
                         this.setState({
-                          visibleModal: false,
-                          selectedMembers: [],
-                          groupName: ""
+                          groupNameTextBoxFocused: true
+                        });
+                      }}
+                      onBlur={() => {
+                        this.setState({
+                          groupNameTextBoxFocused: false
+                        });
+                      }}
+                      style={{ alignItems: "flex-start" }}
+                      onChangeText={val =>
+                        this.setState({
+                          groupName: val
                         })
                       }
-                      style={{
-                        width: "50%",
-                        justifyContent: "center",
-                        alignItems: "center"
-                      }}
-                      rounded
-                      danger
-                    >
-                      <Text style={{ color: "white" }}>Cancel</Text>
-                    </Button>
-                  </View>
+                      value={this.state.groupName}
+                      placeholder="Group Name...!"
+                    />
+                  </Item>
                 </View>
-                <View style={{ width: "50%", alignItems: "center" }}>
-                  <View
+                <View
+                  style={{
+                    width: "80%",
+                    marginTop: 30,
+                    justifyContent: "center"
+                  }}
+                >
+                  <ListItem
                     style={{
-                      marginTop: 50,
-                      width: "80%",
-                      justifyContent: "center",
-                      alignItems: "center"
+                      alignItems: "center",
+                      borderBottomWidth: 0,
+                      justifyContent: "center"
                     }}
                   >
-                    <Button
-                      // disabled={this.state.uploading == true ? true : false}
-                      onPress={() => this.createGroup()}
+                    <CheckBox
+                      onPress={() =>
+                        this.setState(
+                          {
+                            AllUserChecked: !this.state.AllUserChecked
+                          },
+                          () => {
+                            this.setState({
+                              selectedMembers: this.state.AllUserChecked
+                                ? [1]
+                                : []
+                            });
+                          }
+                        )
+                      }
+                      checked={this.state.AllUserChecked}
+                    />
+                    <Body
                       style={{
-                        width: "50%",
+                        borderBottomWidth: 0,
+                        justifyContent: "center",
+                        marginLeft: 10
+                      }}
+                    >
+                      <Text>All Members</Text>
+                    </Body>
+                  </ListItem>
+                </View>
+                {this.state.AllUserChecked ? null : (
+                  <View style={{ width: "80%", marginTop: 50, height: 200 }}>
+                    <Text style={{ color: "gray", fontSize: 18 }}>
+                      Select Members
+                    </Text>
+                    <ScrollView style={{ width: "100%", flex: 1 }}>
+                      <List style={{ marginTop: 10 }}>
+                        {this.state.users.map(item => {
+                          if (
+                            item.id !== f.auth().currentUser.uid &&
+                            item.email &&
+                            item.status !== "admin"
+                          ) {
+                            return (
+                              <ListItem
+                                style={{
+                                  backgroundColor:
+                                    this.state.PressLongModal == item.id
+                                      ? "#D3D3D3"
+                                      : "",
+                                  opacity:
+                                    this.state.PressLongModal == item.id
+                                      ? 0.8
+                                      : 1
+                                }}
+                                // onLongPress={() => {
+                                //   this.setState({
+                                //     PressLong: item.id,
+                                //     backgroundColor: "gray"
+                                //   });
+                                // alert(item.id)
+                                // }}
+                                key={item.id}
+                                onPress={() => {
+                                  this.SelectMembers(item);
+                                  this.setState({
+                                    PressLongModal: item.id
+                                  });
+                                  // if (this.state.PressLong == "") {
+                                  //   this.props.navigation.navigate("Chat", {
+                                  //     user: item
+                                  //   });
+                                  // } else {
+                                  //   this.props.navigation.replace("Home");
+                                  //   this.setState({
+                                  //     PressLong: "",
+                                  //     backgroundColor: ""
+                                  //   });
+                                  // }
+                                }}
+                                avatar
+                              >
+                                <Left>
+                                  <Thumbnail
+                                    source={{
+                                      uri: item.avatar
+                                    }}
+                                  />
+                                </Left>
+                                <Body
+                                  style={{
+                                    backgroundColor:
+                                      this.state.PressLong == item.id
+                                        ? "grey"
+                                        : ""
+                                  }}
+                                >
+                                  <Text style={{ fontWeight: "bold" }}>
+                                    {item.name}
+                                  </Text>
+                                  <Text
+                                    style={{
+                                      fontWeight: this.showStatus(item.id)
+                                    }}
+                                    note
+                                  >
+                                    {item.shortMessage ? item.shortMessage : ""}
+                                    {item.shortMessage
+                                      ? item.shortMessage.length < 35
+                                        ? "\n"
+                                        : ""
+                                      : "\n"}
+                                  </Text>
+                                </Body>
+                                <Right
+                                  style={{
+                                    backgroundColor:
+                                      this.state.PressLong == item.id
+                                        ? "grey"
+                                        : ""
+                                  }}
+                                >
+                                  <Text>3:43 pm</Text>
+                                </Right>
+                              </ListItem>
+                            );
+                          }
+                        })}
+                      </List>
+                    </ScrollView>
+                  </View>
+                )}
+                <View style={{ width: "100%", flexDirection: "row" }}>
+                  <View style={{ width: "50%", alignItems: "center" }}>
+                    <View
+                      style={{
+                        marginTop: 50,
+                        width: "80%",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        marginBottom: 50
+                      }}
+                    >
+                      <Button
+                        // disabled={this.state.uploading == true ? true : false}
+                        onPress={() =>
+                          this.setState({
+                            visibleModal: false,
+                            selectedMembers: [],
+                            groupName: ""
+                          })
+                        }
+                        style={{
+                          width: "50%",
+                          justifyContent: "center",
+                          alignItems: "center"
+                        }}
+                        rounded
+                        danger
+                      >
+                        <Text style={{ color: "white" }}>Cancel</Text>
+                      </Button>
+                    </View>
+                  </View>
+                  <View style={{ width: "50%", alignItems: "center" }}>
+                    <View
+                      style={{
+                        marginTop: 50,
+                        width: "80%",
                         justifyContent: "center",
                         alignItems: "center"
                       }}
-                      rounded
-                      primary
                     >
-                      <Text style={{ color: "white" }}>Save</Text>
-                    </Button>
+                      <Button
+                        // disabled={this.state.uploading == true ? true : false}
+                        onPress={() => this.createGroup()}
+                        style={{
+                          width: "50%",
+                          justifyContent: "center",
+                          alignItems: "center"
+                        }}
+                        rounded
+                        primary
+                      >
+                        <Text style={{ color: "white" }}>Save</Text>
+                      </Button>
+                    </View>
                   </View>
                 </View>
               </View>
-            </View>
+            </ScrollView>
           )}
         </Modal>
         {/* Group created starts */}
